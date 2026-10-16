@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Xinyu Li</title>
+  <meta name="description" content="Xinyu Li — Stanford MS CS (Systems). I build LLM agents and the systems underneath them.">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Xinyu Li">
+  <meta property="og:description" content="Xinyu Li, Stanford MS CS (Systems). I build LLM agents and the systems underneath them: retrieval, serving, and GPU kernels.">
+  <meta property="og:url" content="https://xinyu511.github.io/">
+  <meta name="twitter:card" content="summary">
+  <meta name="theme-color" content="#f4f6f9" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0c1016" media="(prefers-color-scheme: dark)">
+  <link rel="canonical" href="https://xinyu511.github.io/">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/site.css?v=2">
+  <noscript><style>.stack{display:block}.stack-labels li{position:static;transform:none;margin:6px 0}</style></noscript>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="topbar">
+    <a class="home" href="./">xinyu li</a>
+    <nav>
+      <a href="#work">work</a>
+      <a href="#about">about</a>
+    </nav>
+  </header>
+
+  <!-- ============ hero ============ -->
+  <main>
+  <div class="hero">
+    <div>
+      <div class="kicker">MS CS · Stanford · Computer Systems</div>
+      <h1>Xinyu Li</h1>
+      <p class="lede">I build <em>LLM agents</em>, and I care about what runs underneath them: retrieval, serving, and the GPU kernels at the bottom.</p>
+      <p>I'm a first-year master's student at Stanford; I did my undergrad at Carnegie Mellon in Computer Science and Electrical &amp; Computer Engineering. Recently I built a self-tuning agent loop at ByteDance, studied why role-play LLMs drift in long conversations, and wrote a tensor-kernel compiler for NVIDIA Blackwell.</p>
+      <p class="seeking"><b>Looking for a Summer 2027 internship</b> on LLM agents, agent infrastructure, or LLM inference.</p>
+      <div class="links">
+        <a class="btn primary" href="mailto:lixinyu@stanford.edu">Email</a>
+        <a class="btn" href="https://linkedin.com/in/xinyu-li-5950a7270">LinkedIn</a>
+        <a class="btn" href="https://github.com/xinyu511">GitHub</a>
+      </div>
+    </div>
+
+    <figure class="stack-fig">
+      <div class="stack">
+        <ul class="stack-labels">
+          <li data-layer="agents" data-focus="1">
+            <button class="layer-btn" type="button" aria-pressed="false">
+              <span class="name"><span class="name-text">Agents</span> <span class="now">focus</span></span>
+              <span class="sub">self-improving loops, skills</span>
+            </button>
+          </li>
+          <li data-layer="models" data-focus="1">
+            <button class="layer-btn" type="button" aria-pressed="false">
+              <span class="name"><span class="name-text">Models</span> <span class="now">focus</span></span>
+              <span class="sub">long-horizon behavior, eval</span>
+            </button>
+          </li>
+          <li data-layer="retrieval">
+            <button class="layer-btn" type="button" aria-pressed="false">
+              <span class="name"><span class="name-text">Retrieval &amp; systems</span></span>
+              <span class="sub">vector search, recall</span>
+            </button>
+          </li>
+          <li data-layer="kernels">
+            <button class="layer-btn" type="button" aria-pressed="false">
+              <span class="name"><span class="name-text">Kernels &amp; compilers</span></span>
+              <span class="sub">CUDA, PTX, TVM</span>
+            </button>
+          </li>
+          <li data-layer="hardware">
+            <button class="layer-btn" type="button" aria-pressed="false">
+              <span class="name"><span class="name-text">Hardware</span></span>
+              <span class="sub">out-of-order RISC-V</span>
+            </button>
+          </li>
+        </ul>
+      </div>
+      <figcaption>One request, top to bottom. I've built something at every layer and I'm focused on the top two. Click a layer to see the work.</figcaption>
+    </figure>
+  </div>
+
+  <!-- ============ work ============ -->
+  <section id="work">
+    <div class="section-head">
+      <h2>Selected work</h2>
+      <span class="kicker">filter by area</span>
+    </div>
+    <div class="filters" role="group" aria-label="Filter by area">
+      <button class="chip" type="button" data-area="agentic" aria-pressed="false">Agentic AI</button>
+      <button class="chip" type="button" data-area="llm-agents" aria-pressed="false">LLM Agents</button>
+      <button class="chip" type="button" data-area="llm" aria-pressed="false">Large Language Models</button>
+      <button class="chip" type="button" data-area="conversational" aria-pressed="false">Conversational AI</button>
+      <button class="chip" type="button" data-area="inference" aria-pressed="false">AI Inference Optimization</button>
+      <button class="chip" type="button" data-area="mlsys" aria-pressed="false">ML Systems</button>
+      <button class="chip" type="button" data-area="ai-infra" aria-pressed="false">AI Infrastructure</button>
+      <button class="chip" type="button" data-area="ir" aria-pressed="false">Information Retrieval</button>
+      <button class="chip" type="button" data-area="gpus" aria-pressed="false">GPUs</button>
+      <button class="chip" type="button" data-area="sys" aria-pressed="false">Systems Programming</button>
+    </div>
+    <div class="filter-status" aria-live="polite"></div>
+
+    <article class="work" data-layer="agents" data-areas="agentic llm-agents ai-infra">
+      <div class="work-meta"><span class="layer">Agents</span><br>ByteDance<br>Jul – Sep 2026 · intern</div>
+      <div>
+        <h3>An agent loop that tunes an ads calibration system</h3>
+        <p>Replaced manual tuning of an ad-outcome calibration system with a dynamic agentic optimization loop. I also built a self-evolving skill subsystem: execution outcomes become versioned skill definitions, stored in distributed storage that runtime agents read directly instead of going through the API tier.</p>
+        <ul class="stats">
+          <li><b>12% → 5%</b>offline prediction deviation vs. best manual baseline</li>
+          <li><b>−53.6%</b>play-value rate error in online A/B</li>
+        </ul>
+        <div class="tags"><span class="tag">agents</span><span class="tag">skill memory</span><span class="tag">distributed storage</span></div>
+      </div>
+    </article>
+
+    <article class="work" data-layer="models" data-areas="llm conversational llm-agents inference">
+      <div class="work-meta"><span class="layer">Models</span><br>Stanford CS329X<br>Oct 2026 – now</div>
+      <div>
+        <h3><a href="projects/persona-stability.html">Why role-play LLMs drift in long conversations</a></h3>
+        <p>Over 40+ turns, persona-conditioned LLMs stop sounding like their character. We found the failure looks like <em>imitation, not forgetting</em>: the model copies its own and its partner's earlier lines while still answering persona facts correctly. I built the harness: KV-cache-reusing MLX/HF backends, decoding-time interventions, and a blind LLM judge calibrated with planted errors.</p>
+        <ul class="stats">
+          <li><b>~225</b>dialogues generated</li>
+          <li><b>~500</b>blind-judged chunks</li>
+          <li><b>24/24</b>persona facts still correct at turn 39</li>
+        </ul>
+        <div class="tags"><span class="tag">Qwen3</span><span class="tag">logit / attention steering</span><span class="tag">LLM-as-judge</span><span class="tag">MLX · HF</span></div>
+        <a class="more" href="projects/persona-stability.html">Read the write-up →</a>
+      </div>
+    </article>
+
+    <article class="work" data-layer="models" data-areas="llm ir">
+      <div class="work-meta"><span class="layer">Models</span><br>CMU NLP course<br>Fall 2023</div>
+      <div>
+        <h3>Question answering and generation over long documents</h3>
+        <p>A two-person NLP course project. To answer a question about a long article, TF-IDF retrieval picks the relevant passages, a BERT classifier routes yes/no versus open questions, and fine-tuned T5 models answer each type. To generate questions, YAKE keywords become answers that a fine-tuned T5 writes questions for. Few-shot Llama-2 was tried and dropped as too slow and hard to control.</p>
+        <ul class="stats">
+          <li><b>0.811</b>F1 on yes/no questions (BoolQ)</li>
+          <li><b>0.763</b>F1 on span answers (SQuAD)</li>
+          <li><b>79%</b>of sampled generated questions made sense</li>
+        </ul>
+        <div class="tags"><span class="tag">T5</span><span class="tag">BERT</span><span class="tag">TF-IDF retrieval</span><span class="tag">PyTorch</span></div>
+      </div>
+    </article>
+
+    <article class="work" data-layer="retrieval" data-areas="ir sys">
+      <div class="work-meta"><span class="layer">Retrieval &amp; systems</span><br>CMU STAR Lab<br>Feb 2025 – May 2026</div>
+      <div>
+        <h3>Stabilizing recall across query groups in vector search</h3>
+        <p>Vector databases serve some groups of queries much worse than others. I built offline pipelines to measure recall disparity across vector clusters and modified pgvector's HNSW and IVF indexes with an adaptive feedback loop driven by cluster-level analysis. Advised by Prof. Akshitha Sriraman.</p>
+        <ul class="stats">
+          <li><b>−8%</b>long-term recall variation</li>
+        </ul>
+        <div class="tags"><span class="tag">pgvector</span><span class="tag">ANN benchmarks</span><span class="tag">Docker · SQL</span></div>
+      </div>
+    </article>
+
+    <article class="work" data-layer="kernels" data-areas="gpus mlsys inference">
+      <div class="work-meta"><span class="layer">Kernels &amp; compilers</span><br>CMU Catalyst Lab<br>May – Aug 2025</div>
+      <div>
+        <h3>A tensor-kernel compiler for NVIDIA Blackwell</h3>
+        <p>Built a compiler for B200 GPUs on TVM with custom scheduling, prototyping codegen passes and reproducible performance harnesses. I tuned matmul through tiling, tensor memory (TMEM), and thread-block cluster launch in PTX 8.7. Advised by Prof. Tianqi Chen.</p>
+        <ul class="stats">
+          <li><b>97%</b>of ThunderKittens matmul throughput</li>
+        </ul>
+        <div class="tags"><span class="tag">CUDA</span><span class="tag">PTX</span><span class="tag">TVM</span><span class="tag">B200</span></div>
+      </div>
+    </article>
+
+    <article class="work" data-layer="models" data-areas="mlsys gpus">
+      <div class="work-meta"><span class="layer">Models</span><br>CMU, Moura group<br>May 2025 – 2026</div>
+      <div>
+        <h3>Amortized neural estimators instead of Monte Carlo</h3>
+        <p>Trained small surrogate networks to predict what thousands of Monte Carlo samples would, for probabilistic prediction and robustness certification. Ran the large-scale comparisons on GPU clusters and AWS Trainium, and introduced an L1-based fidelity metric.</p>
+        <ul class="stats">
+          <li><b>~100×</b>FLOP efficiency at comparable accuracy</li>
+        </ul>
+        <div class="tags"><span class="tag">PyTorch</span><span class="tag">Trainium</span><span class="tag">Hydra</span></div>
+      </div>
+    </article>
+
+    <article class="work" data-layer="hardware" data-areas="">
+      <div class="work-meta"><span class="layer">Hardware</span><br>CMU 18-447<br>Spring 2025</div>
+      <div>
+        <h3>A 7-stage out-of-order RISC-V core</h3>
+        <p>Designed in SystemVerilog with register renaming, caching, and forwarding, then added hybrid branch predictors (TAGE-style and a neural predictor) and did timing, area, and power analysis.</p>
+        <ul class="stats">
+          <li><b>+25–30%</b>IPC from branch prediction</li>
+          <li><b>2.7 ns</b>critical path</li>
+        </ul>
+        <div class="tags"><span class="tag">SystemVerilog</span><span class="tag">VCS</span><span class="tag">gem5</span></div>
+      </div>
+    </article>
+  </section>
+
+  <!-- ============ about ============ -->
+  <section id="about">
+    <div class="section-head"><h2>About</h2></div>
+    <div class="two-col">
+      <div>
+        <h3 class="sub-h">Experience &amp; education</h3>
+        <ul class="timeline">
+          <li><span class="when">2026 –</span><span class="what"><b>Stanford University</b><span>MS Computer Science, Computer Systems · expected 2028</span></span></li>
+          <li><span class="when">2026</span><span class="what"><b>ByteDance</b><span>Software engineering intern, San Jose</span></span></li>
+          <li><span class="when">2025 – 26</span><span class="what"><b>CMU research</b><span>STAR Lab · Catalyst Lab · Moura group</span></span></li>
+          <li><span class="when">2022 – 26</span><span class="what"><b>Carnegie Mellon University</b><span>BS Computer Science · BS Electrical &amp; Computer Engineering · GPA 3.91</span></span></li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="sub-h">Teaching</h3>
+        <ul class="pubs">
+          <li>
+            <span class="title">15-440 Distributed Systems, CMU</span>
+            <span class="authors">Teaching assistant, 2025. Led recitations on RPC, consistency, and fault tolerance; wrote Go debugging guides and reviewed Raft labs for 400+ students.</span>
+          </li>
+          <li>
+            <span class="title">21-127 Concepts of Mathematics, CMU</span>
+            <span class="authors">Teaching assistant, 2023. Led recitations on proofs and number theory; ran a LaTeX bootcamp for proof writing.</span>
+          </li>
+        </ul>
+        <h3 class="sub-h">Award</h3>
+        <p style="margin:0;color:var(--ink-2)"><b style="color:var(--ink);font-weight:600">Outstanding Winner, MAA Award</b>, Mathematical Contest in Modeling 2025: top 43 of 27,000+ teams.</p>
+      </div>
+    </div>
+  </section>
+  </main>
+
+  <footer>
+    <span>lixinyu@stanford.edu</span>
+    <span>Last updated Oct 2026</span>
+  </footer>
+</div>
+<script src="assets/stack.js?v=2"></script>
+</body>
+</html>

@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <style>.t{fill:#dde6fb;stroke:#2a5bd7}.s{fill:#2a5bd7}@media (prefers-color-scheme:dark){.t{fill:#15264a;stroke:#72a6ff}.s{fill:#72a6ff}}</style>
+  <polygon class="s" points="3,20 16,26 29,20 29,23 16,29 3,23"/>
+  <polygon class="t" stroke-width="1.5" points="3,20 16,14 29,20 16,26"/>
+  <polygon class="s" points="3,10 16,16 29,10 29,13 16,19 3,13" opacity=".55"/>
+  <polygon class="t" stroke-width="1.5" points="3,10 16,4 29,10 16,16"/>
+</svg>
