@@ -464,7 +464,7 @@ EXTRA_PAGES = [
             kicker="Award · Mathematical Contest in Modeling 2025 · Outstanding Winner, MAA Award",
             h1="Managing tourism in Juneau with dynamic programming",
             dek="Juneau, Alaska gets more than a million visitors a year. Our four-day contest paper asked how a city can tax and promote tourism so the economy grows without wearing down its glaciers or its residents.",
-            meta=["Two-person team, with a teammate from Rice University", "Multi-objective dynamic programming"],
+            meta=["Two-person team, with a teammate from Rice University", "Multi-objective dynamic programming", '<a href="../assets/papers/mcm-2025-sustainable-tourism-juneau.pdf">Paper (PDF)</a>'],
             facts=[("43", "Outstanding papers of 27,000+ teams"), ("5", "year plan"), ("3", "objectives balanced"), ("2", "cities modeled")],
             body="""
 <h2>The model</h2>
@@ -475,7 +475,7 @@ EXTRA_PAGES = [
 <p>The plan keeps visitors roughly flat at 1.5–1.7 million a year and varies the tax between 3.2% and 5.0%. Revenue goes increasingly to environmental protection, so the environmental index recovers steadily while resident satisfaction stays near 0.9. We tested how the plan responds to each input in a sensitivity analysis and adapted the model to Miami, where crowding and visitor behavior differ.</p>
 
 <h2>Links</h2>
-<p><a href="https://www.comap-math.org/mcm/2025Certs/2504448.pdf">Certificate</a> · <a href="https://www.contest.comap.com/undergraduate/contests/mcm/contests/2025/results/">Official 2025 results</a></p>
+<p><a href="../assets/papers/mcm-2025-sustainable-tourism-juneau.pdf">Read the paper (PDF, 25 pages)</a> · <a href="https://www.comap-math.org/mcm/2025Certs/2504448.pdf">Certificate</a> · <a href="https://www.contest.comap.com/undergraduate/contests/mcm/contests/2025/results/">Official 2025 results</a></p>
 """,
         ),
     ),
