@@ -151,12 +151,13 @@
     <article class="work" data-layer="retrieval" data-areas="ir sys">
       <div class="work-meta"><span class="layer">Retrieval &amp; systems</span><br>CMU STAR Lab<br>Feb 2025 – May 2026</div>
       <div>
-        <h3>Stabilizing recall across query groups in vector search</h3>
-        <p>Vector databases serve some groups of queries much worse than others. I built offline pipelines to measure recall disparity across vector clusters and modified pgvector's HNSW and IVF indexes with an adaptive feedback loop driven by cluster-level analysis. Advised by Prof. Akshitha Sriraman.</p>
+        <h3>Measuring who vector search fails</h3>
+        <p>Approximate nearest-neighbor search in pgvector returns good results for some groups of queries and poor results for others. I built the lab's offline measurement pipeline on ann-benchmarks: pgvector HNSW in Docker, swept over index settings, recording recall@10 per query and comparing recall across KMeans clusters of the query space. I added new workloads (GloVe, CIFAR embeddings, FairFace, DBpedia) and helped build the runtime monitor for the lab's adaptive search system. Advised by Prof. Akshitha Sriraman.</p>
         <ul class="stats">
-          <li><b>−8%</b>long-term recall variation</li>
+          <li><b>56%</b>of GloVe-100 queries below 0.9 recall@10 at ef_search 10</li>
+          <li><b>10k</b>queries per sweep, 8 search settings</li>
         </ul>
-        <div class="tags"><span class="tag">pgvector</span><span class="tag">ANN benchmarks</span><span class="tag">Docker · SQL</span></div>
+        <div class="tags"><span class="tag">pgvector</span><span class="tag">HNSW</span><span class="tag">ann-benchmarks</span><span class="tag">Docker</span></div>
       </div>
     </article>
 
