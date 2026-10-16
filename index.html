@@ -10,6 +10,7 @@
   <meta property="og:title" content="Xinyu Li">
   <meta property="og:description" content="Xinyu Li, Stanford MS CS (Systems). I build LLM agents and the systems underneath them: retrieval, serving, and GPU kernels.">
   <meta property="og:url" content="https://xinyu511.github.io/">
+  <meta property="og:image" content="https://xinyu511.github.io/assets/img/profile.jpg">
   <meta name="twitter:card" content="summary">
   <meta name="theme-color" content="#f4f6f9" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#0c1016" media="(prefers-color-scheme: dark)">
@@ -17,7 +18,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/site.css?v=10">
+  <link rel="stylesheet" href="assets/site.css?v=13">
   <noscript><style>.stack{display:block}.stack-labels li{position:static;transform:none;margin:6px 0}</style></noscript>
 </head>
 <body>
@@ -26,8 +27,8 @@
   <header class="topbar">
     <a class="home" href="./">xinyu li</a>
     <nav>
-      <a href="#work">work</a>
       <a href="#about">about</a>
+      <a href="#work">work</a>
     </nav>
   </header>
 
@@ -35,8 +36,13 @@
   <main>
   <div class="hero">
     <div>
-      <div class="kicker">MS CS · Stanford · Computer Systems</div>
-      <h1>Xinyu Li</h1>
+      <div class="id-row">
+        <img class="avatar" src="assets/img/profile.jpg" alt="Xinyu Li" width="104" height="104">
+        <div>
+          <div class="kicker">MS CS · Stanford · Computer Systems</div>
+          <h1>Xinyu Li</h1>
+        </div>
+      </div>
       <p class="lede">I build <em>LLM agents</em>, and I care about what runs underneath them: retrieval, serving, and the GPU kernels at the bottom.</p>
       <p>I'm a first-year master's student at Stanford; I did my undergrad at Carnegie Mellon in Computer Science and Electrical &amp; Computer Engineering. Recently I built a self-tuning agent loop at ByteDance, studied why role-play LLMs drift in long conversations, and wrote a tensor-kernel compiler for NVIDIA Blackwell.</p>
       <p class="seeking"><b>Looking for a Summer 2027 internship</b> on LLM agents, agent infrastructure, or LLM inference.</p>
@@ -85,6 +91,42 @@
       <figcaption>One request, top to bottom. I've built something at every layer and I'm focused on the top two. Click a layer to see the work.</figcaption>
     </figure>
   </div>
+
+  <!-- ============ about ============ -->
+  <section id="about">
+    <div class="section-head"><h2>About</h2></div>
+    <div class="two-col">
+      <div>
+        <h3 class="sub-h">Experience &amp; education</h3>
+        <ul class="timeline">
+          <li class="has-logo"><span class="logo"><img src="assets/logos/stanford.png" alt="Stanford University" width="26" height="26" loading="lazy"></span><span class="when">2026 –</span><span class="what"><b>Stanford University</b><span>MS Computer Science, Computer Systems · expected 2028</span></span></li>
+          <li class="has-logo"><span class="logo"><img src="assets/logos/bytedance.png" alt="ByteDance" width="26" height="26" loading="lazy"></span><span class="when">2026</span><span class="what"><b>ByteDance</b><span>Software engineering intern, San Jose</span></span></li>
+          <li class="has-logo"><span class="logo"><img src="assets/logos/cmu.png" alt="Carnegie Mellon University" width="26" height="26" loading="lazy"></span><span class="when">2025 – 26</span><span class="what"><b>CMU research</b><span>STAR Lab · Catalyst Lab · Moura group</span></span></li>
+          <li class="has-logo"><span class="logo"><img src="assets/logos/cmu.png" alt="Carnegie Mellon University" width="26" height="26" loading="lazy"></span><span class="when">2022 – 26</span><span class="what"><b>Carnegie Mellon University</b><span>BS Computer Science · BS Electrical &amp; Computer Engineering · GPA 3.91</span></span></li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="sub-h">Teaching</h3>
+        <ul class="pubs">
+          <li>
+            <span class="title">15-440 Distributed Systems, CMU</span>
+            <span class="authors">Teaching assistant, 2025. Led recitations on RPC, consistency, and fault tolerance; wrote Go debugging guides and reviewed Raft labs for 400+ students.</span>
+          </li>
+          <li>
+            <span class="title">15-213 Introduction to Computer Systems, CMU</span>
+            <span class="authors">Teaching assistant, Summer 2025.</span>
+          </li>
+          <li>
+            <span class="title">21-127 Concepts of Mathematics, CMU</span>
+            <span class="authors">Teaching assistant, 2023. Led recitations on proofs and number theory; ran a LaTeX bootcamp for proof writing.</span>
+          </li>
+        </ul>
+        <h3 class="sub-h">Award</h3>
+        <p style="margin:0;color:var(--ink-2)"><b style="color:var(--ink);font-weight:600">Outstanding Winner and MAA Award</b>, Mathematical Contest in Modeling 2025, with a teammate from Rice University. Our model managed tourism in Juneau, Alaska; 43 of 27,000+ MCM/ICM teams were named Outstanding. <a href="https://www.comap-math.org/mcm/2025Certs/2504448.pdf">Certificate</a> · <a href="https://www.contest.comap.com/undergraduate/contests/mcm/contests/2025/results/">official results</a></p>
+        <a class="more" href="projects/mcm-2025.html">Read the write-up →</a>
+      </div>
+    </div>
+  </section>
 
   <!-- ============ work ============ -->
   <section id="work">
@@ -177,6 +219,20 @@
       </div>
     </article>
 
+    <article class="work" data-layer="retrieval" data-areas="sys">
+      <div class="work-meta"><a class="thumb" href="projects/distributed-systems.html" aria-label="Open the write-up: Distributed systems in Go: a transport protocol, Raft, and a replicated store"><svg viewBox="0 0 120 72" aria-hidden="true" class="thumb-art">
+  <line x1="60" y1="20" x2="30" y2="52" stroke="var(--ink-3)" stroke-width="1.6"/><line x1="60" y1="20" x2="90" y2="52" stroke="var(--ink-3)" stroke-width="1.6"/>
+  <line x1="30" y1="52" x2="90" y2="52" stroke="var(--ink-3)" stroke-width="1.4" stroke-dasharray="3 3"/>
+  <circle cx="60" cy="20" r="10" fill="var(--s1)"/><circle cx="30" cy="52" r="8" fill="var(--paper)" stroke="var(--s1)" stroke-width="2"/><circle cx="90" cy="52" r="8" fill="var(--paper)" stroke="var(--s1)" stroke-width="2"/>
+</svg></a><span class="layer">Retrieval &amp; systems</span><br>CMU 15-440<br>Fall 2024</div>
+      <div>
+        <h3><a href="projects/distributed-systems.html">Distributed systems in Go: a transport protocol, Raft, and a replicated store</a></h3>
+        <p>Three systems from the distributed systems course: a reliable, ordered transport protocol on top of UDP, the Raft consensus algorithm with leader election and log replication, and an eventually consistent key-value store built on actors that replicates across servers.</p>
+        <div class="tags"><span class="tag">Go</span><span class="tag">UDP</span><span class="tag">Raft</span><span class="tag">actors</span><span class="tag">net/rpc</span></div>
+        <a class="more" href="projects/distributed-systems.html">Read the write-up →</a>
+      </div>
+    </article>
+
     <article class="work" data-layer="kernels" data-areas="gpus mlsys inference">
       <div class="work-meta"><div class="thumb" aria-hidden="true"><div data-chart="bw-matmul" data-mode="thumb"></div></div><span class="layer">Kernels &amp; compilers</span><br>CMU Catalyst Lab<br>May – Aug 2025</div>
       <div>
@@ -244,41 +300,6 @@
 <!-- work:end -->
   </section>
 
-  <!-- ============ about ============ -->
-  <section id="about">
-    <div class="section-head"><h2>About</h2></div>
-    <div class="two-col">
-      <div>
-        <h3 class="sub-h">Experience &amp; education</h3>
-        <ul class="timeline">
-          <li class="has-logo"><span class="logo"><img src="assets/logos/stanford.png" alt="Stanford University" width="26" height="26" loading="lazy"></span><span class="when">2026 –</span><span class="what"><b>Stanford University</b><span>MS Computer Science, Computer Systems · expected 2028</span></span></li>
-          <li class="has-logo"><span class="logo"><img src="assets/logos/bytedance.png" alt="ByteDance" width="26" height="26" loading="lazy"></span><span class="when">2026</span><span class="what"><b>ByteDance</b><span>Software engineering intern, San Jose</span></span></li>
-          <li class="has-logo"><span class="logo"><img src="assets/logos/cmu.png" alt="Carnegie Mellon University" width="26" height="26" loading="lazy"></span><span class="when">2025 – 26</span><span class="what"><b>CMU research</b><span>STAR Lab · Catalyst Lab · Moura group</span></span></li>
-          <li class="has-logo"><span class="logo"><img src="assets/logos/cmu.png" alt="Carnegie Mellon University" width="26" height="26" loading="lazy"></span><span class="when">2022 – 26</span><span class="what"><b>Carnegie Mellon University</b><span>BS Computer Science · BS Electrical &amp; Computer Engineering · GPA 3.91</span></span></li>
-        </ul>
-      </div>
-      <div>
-        <h3 class="sub-h">Teaching</h3>
-        <ul class="pubs">
-          <li>
-            <span class="title">15-440 Distributed Systems, CMU</span>
-            <span class="authors">Teaching assistant, 2025. Led recitations on RPC, consistency, and fault tolerance; wrote Go debugging guides and reviewed Raft labs for 400+ students.</span>
-          </li>
-          <li>
-            <span class="title">15-213 Introduction to Computer Systems, CMU</span>
-            <span class="authors">Teaching assistant, Summer 2025.</span>
-          </li>
-          <li>
-            <span class="title">21-127 Concepts of Mathematics, CMU</span>
-            <span class="authors">Teaching assistant, 2023. Led recitations on proofs and number theory; ran a LaTeX bootcamp for proof writing.</span>
-          </li>
-        </ul>
-        <h3 class="sub-h">Award</h3>
-        <p style="margin:0;color:var(--ink-2)"><b style="color:var(--ink);font-weight:600">Outstanding Winner and MAA Award</b>, Mathematical Contest in Modeling 2025, with a teammate from Rice University. Our model managed tourism in Juneau, Alaska; 43 of 27,000+ MCM/ICM teams were named Outstanding. <a href="https://www.comap-math.org/mcm/2025Certs/2504448.pdf">Certificate</a> · <a href="https://www.contest.comap.com/undergraduate/contests/mcm/contests/2025/results/">official results</a></p>
-        <a class="more" href="projects/mcm-2025.html">Read the write-up →</a>
-      </div>
-    </div>
-  </section>
   </main>
 
   <footer>
@@ -286,8 +307,8 @@
     <span>Last updated Oct 2026</span>
   </footer>
 </div>
-<script src="assets/chart-data.js?v=10"></script>
-<script src="assets/charts.js?v=10"></script>
-<script src="assets/stack.js?v=10"></script>
+<script src="assets/chart-data.js?v=13"></script>
+<script src="assets/charts.js?v=13"></script>
+<script src="assets/stack.js?v=13"></script>
 </body>
 </html>

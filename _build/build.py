@@ -16,7 +16,7 @@ import re
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-V = "10"  # asset cache-busting version
+V = "13"  # asset cache-busting version
 
 LAYERS = {
     "agents": "Agents",
@@ -33,6 +33,14 @@ LOOP_ART = """<svg viewBox="0 0 120 72" aria-hidden="true" class="thumb-art">
   <path d="M69 15 Q75 15 81 22" fill="none" stroke="var(--ink-3)" stroke-width="1.6" stroke-linecap="round"/>
   <path d="M86 35 Q60 52 34 35" fill="none" stroke="var(--ink-3)" stroke-width="1.6" stroke-linecap="round" stroke-dasharray="3 3"/>
   <rect x="44" y="52" width="32" height="12" rx="3" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.2"/>
+</svg>"""
+
+
+# Raft-style three-node thumbnail for work without published numbers.
+RAFT_ART = """<svg viewBox="0 0 120 72" aria-hidden="true" class="thumb-art">
+  <line x1="60" y1="20" x2="30" y2="52" stroke="var(--ink-3)" stroke-width="1.6"/><line x1="60" y1="20" x2="90" y2="52" stroke="var(--ink-3)" stroke-width="1.6"/>
+  <line x1="30" y1="52" x2="90" y2="52" stroke="var(--ink-3)" stroke-width="1.4" stroke-dasharray="3 3"/>
+  <circle cx="60" cy="20" r="10" fill="var(--s1)"/><circle cx="30" cy="52" r="8" fill="var(--paper)" stroke="var(--s1)" stroke-width="2"/><circle cx="90" cy="52" r="8" fill="var(--paper)" stroke="var(--s1)" stroke-width="2"/>
 </svg>"""
 
 PROJECTS = [
@@ -219,6 +227,53 @@ PROJECTS = [
 {{chart:star-tradeoff|Recall against throughput, HNSW M=16|Each point is one ef_search setting, from 10 (fastest) to 800.}}
 <p>The misses also cluster. Grouping GloVe-25 queries into ten regions of the embedding space, the worst region's mean recall is 0.16 below the best one's at the same setting. That gap is what a single global search breadth can't fix, and why the lab's system tunes search per region.</p>
 {{chart:star-clusters|Mean recall@10 by query cluster, GloVe-25, ef_search 10|Queries grouped by KMeans (k = 10) on the query vectors; overall mean 0.804.}}
+""",
+        ),
+    ),
+    dict(
+        slug="distributed-systems", layer="retrieval", areas="sys",
+        org="CMU 15-440", when="Fall 2024",
+        title="Distributed systems in Go: a transport protocol, Raft, and a replicated store",
+        summary="Three systems from the distributed systems course: a reliable, ordered transport protocol on top of UDP, the Raft consensus algorithm with leader election and log replication, and an eventually consistent key-value store built on actors that replicates across servers.",
+        stats=[], tags=["Go", "UDP", "Raft", "actors", "net/rpc"],
+        thumb_art=RAFT_ART,
+        page=dict(
+            title="Distributed Systems Projects",
+            kicker="Retrieval & systems · CMU 15-440 Distributed Systems · Fall 2024",
+            h1="Distributed systems in Go: a transport protocol, Raft, and a replicated store",
+            dek="Three systems, each about a different way things go wrong across a network: lost packets, crashed leaders, and replicas that disagree.",
+            meta=["Transport and key-value store with a partner", "Go · goroutines and channels · net/rpc"],
+            facts=[("3", "systems"), ("105 ms", "Raft heartbeat"), ("400–600 ms", "election timeout"), ("100 ms", "replica sync batch")],
+            body="""
+<p class="note">The figures on this page are design diagrams drawn from the code, not measurements. Course rules keep the code itself private.</p>
+
+<h2>A reliable transport protocol on UDP</h2>
+<p>UDP drops, duplicates, and reorders packets. Our protocol gives applications reliable, in-order messages on top of it, with one client implementation and one server that handles many clients. Both sides run as an event loop: a reader goroutine hands packets over channels to a single routine that owns all connection state, so none of it needs locks.</p>
+<ul>
+  <li><strong>Sliding window:</strong> a message goes out only while it fits in the window and the count of unacknowledged messages stays under a cap; the rest wait in a queue that drains as acknowledgements arrive, including cumulative ones.</li>
+  <li><strong>Retransmission</strong> is driven by epochs, with exponential backoff tracked per message.</li>
+  <li><strong>Failure detection:</strong> a peer that stays silent for a set number of epochs is declared lost; connection setup retries the same way.</li>
+  <li><strong>Integrity and order:</strong> the receiver checks size and checksum, drops corrupted messages, and buffers early arrivals until the gap is filled.</li>
+</ul>
+{{diagram:lsp}}
+
+<h2>Raft consensus</h2>
+<p>Raft keeps a replicated log consistent while servers crash and restart. I implemented leader election and log replication.</p>
+<ul>
+  <li><strong>Election:</strong> each server is a follower, candidate, or leader, driven by one state-machine goroutine. A follower that hears no heartbeat within a randomized 400–600 ms timeout starts an election; a candidate with votes from a majority becomes leader, and voters refuse candidates whose logs are behind theirs.</li>
+  <li><strong>Replication:</strong> the leader sends heartbeats every 105 ms, tracks how far each follower's log matches its own, backs up on a mismatch, and commits an entry once a majority holds it.</li>
+</ul>
+{{diagram:raft}}
+
+<h2>A replicated key-value store on actors</h2>
+<p>A key-value store spread over several servers, each running a group of actors that own copies of the data and talk only by messages. Clients can read and write at any actor; replicas converge without coordination.</p>
+<ul>
+  <li><strong>Actor runtime pieces:</strong> an unbounded mailbox whose sends never block, and remote messages delivered as asynchronous RPCs.</li>
+  <li><strong>Consistency:</strong> last writer wins, by timestamp with the actor ID as a tie-breaker.</li>
+  <li><strong>Sync:</strong> each actor batches recent writes and sends them every 100 ms to its local peers, but to only one actor on each remote server, which keeps cross-server traffic down.</li>
+  <li><strong>Joining:</strong> a new server announces itself, and existing servers push it their full state.</li>
+</ul>
+{{diagram:kv}}
 """,
         ),
     ),
@@ -428,6 +483,55 @@ EXTRA_PAGES = [
 
 
 # ---------------------------------------------------------------- rendering
+
+ARROW = '<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0L10,5L0,10z" fill="var(--ink-3)"/></marker></defs>'
+
+DIAGRAMS = {
+    "lsp": ("Sliding window and retransmission", "Window of 4 shown for illustration; the course default is a window of 1.", """<svg viewBox="0 0 640 190" role="img" aria-label="Message sequence numbers 1 to 12: 1 to 3 acknowledged, 4 to 7 sent inside the window and awaiting acknowledgement, 8 to 12 queued until the window slides. The oldest unacknowledged message is resent with exponential backoff.">""" + ARROW + "".join(
+        f'<rect x="{18 + i * 51}" y="48" width="44" height="38" rx="5" class="{"d-done" if i < 3 else "d-live" if i < 7 else "d-wait"}"/><text x="{40 + i * 51}" y="72" text-anchor="middle" class="d-num">{i + 1}</text>'
+        for i in range(12)) + """
+  <path d="M168,38 V30 H372 V38" class="d-bracket"/><text x="270" y="22" text-anchor="middle" class="d-label">window</text>
+  <text x="91" y="108" text-anchor="middle" class="d-small">acknowledged</text>
+  <text x="270" y="108" text-anchor="middle" class="d-small">sent, awaiting ack</text>
+  <text x="474" y="108" text-anchor="middle" class="d-small">queued until the window slides</text>
+  <path d="M193,150 V96" class="d-arrow" marker-end="url(#ah)"/>
+  <text x="203" y="150" class="d-label">oldest unacked: resent each time its backoff expires (1, 2, 4 … epochs)</text>
+  <text x="203" y="170" class="d-small">ack for 4 arrives → window slides right, 8 is sent</text>
+</svg>"""),
+    "raft": ("Raft server states", "Timings are the values used in my implementation.", """<svg viewBox="0 0 640 230" role="img" aria-label="Raft states. A follower becomes a candidate after 400 to 600 ms without a heartbeat. A candidate with a majority of votes becomes leader. Candidates and leaders step down to follower on seeing a higher term. The leader sends heartbeats every 105 ms.">""" + ARROW + """
+  <rect x="24" y="90" width="140" height="50" rx="10" class="d-box"/><text x="94" y="120" text-anchor="middle" class="d-title">Follower</text>
+  <rect x="250" y="90" width="140" height="50" rx="10" class="d-box"/><text x="320" y="120" text-anchor="middle" class="d-title">Candidate</text>
+  <rect x="476" y="90" width="140" height="50" rx="10" class="d-box d-lead"/><text x="546" y="120" text-anchor="middle" class="d-title">Leader</text>
+  <path d="M120,88 Q207,40 294,88" class="d-arrow" marker-end="url(#ah)"/><text x="207" y="44" text-anchor="middle" class="d-small">no heartbeat for 400–600 ms</text><text x="207" y="58" text-anchor="middle" class="d-small">(randomized)</text>
+  <path d="M346,88 Q433,40 520,88" class="d-arrow" marker-end="url(#ah)"/><text x="433" y="52" text-anchor="middle" class="d-small">votes from a majority</text>
+  <path d="M294,142 Q207,186 120,142" class="d-arrow" marker-end="url(#ah)"/><text x="207" y="182" text-anchor="middle" class="d-small">sees a higher term</text>
+  <path d="M546,142 Q546,214 320,214 Q94,214 94,142" class="d-arrow" marker-end="url(#ah)"/><text x="320" y="208" text-anchor="middle" class="d-small">sees a higher term</text>
+  <text x="546" y="160" text-anchor="middle" class="d-small">heartbeat every 105 ms</text>
+</svg>"""),
+    "kv": ("How replicas sync", "Two servers with three actors each, shown for illustration.", """<svg viewBox="0 0 640 220" role="img" aria-label="Two servers with three actors each. A client writes to one actor on server A. Every 100 ms that actor sends its batch of writes to the other actors on server A and to a single actor on server B, which spreads it locally.">""" + ARROW + """
+  <rect x="16" y="40" width="284" height="150" rx="12" class="d-server"/><text x="30" y="62" class="d-label">Server A</text>
+  <rect x="340" y="40" width="284" height="150" rx="12" class="d-server"/><text x="354" y="62" class="d-label">Server B</text>
+  <circle cx="90" cy="120" r="20" class="d-actor d-hot"/><circle cx="170" cy="92" r="20" class="d-actor"/><circle cx="170" cy="152" r="20" class="d-actor"/>
+  <circle cx="414" cy="120" r="20" class="d-actor"/><circle cx="520" cy="92" r="20" class="d-actor"/><circle cx="520" cy="152" r="20" class="d-actor"/>
+  <path d="M110,113 L148,99" class="d-arrow" marker-end="url(#ah)"/><path d="M110,127 L148,145" class="d-arrow" marker-end="url(#ah)"/>
+  <path d="M110,120 C200,120 300,120 392,120" class="d-arrow d-strong" marker-end="url(#ah)"/>
+  <path d="M434,113 L498,99" class="d-arrow d-dashed" marker-end="url(#ah)"/><path d="M434,127 L498,145" class="d-arrow d-dashed" marker-end="url(#ah)"/>
+  <path d="M90,14 V98" class="d-arrow" marker-end="url(#ah)"/><text x="98" y="22" class="d-small">client Put</text>
+  <text x="250" y="112" text-anchor="middle" class="d-small">one batch per</text><text x="250" y="138" text-anchor="middle" class="d-small">remote server</text>
+  <text x="160" y="208" text-anchor="middle" class="d-small">batched every 100 ms to local peers</text>
+  <text x="480" y="208" text-anchor="middle" class="d-small">spread locally on B</text>
+</svg>"""),
+}
+
+
+def diagram_block(key):
+    title, sub, svg = DIAGRAMS[key]
+    return f"""<figure class="figure diagram">
+  <div class="chart-title">{title}</div>
+  <p class="chart-sub">{sub}</p>
+  {svg}
+</figure>"""
+
 def chart_block(spec, pair=False):
     parts = spec.split("|")
     if not pair:
@@ -454,6 +558,7 @@ def chart_block(spec, pair=False):
 def expand(body):
     body = re.sub(r"\{\{chart:(.+?)\}\}", lambda m: chart_block(m.group(1)), body, flags=re.S)
     body = re.sub(r"\{\{pair:(.+?)\}\}", lambda m: chart_block(m.group(1), pair=True), body, flags=re.S)
+    body = re.sub(r"\{\{diagram:(\w+)\}\}", lambda m: diagram_block(m.group(1)), body)
     return body
 
 

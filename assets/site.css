@@ -295,3 +295,35 @@ a.thumb:hover { border-color: var(--accent); transform: translateY(-1px); }
 .figure.photo img { max-width: min(380px, 100%); margin: 0 auto; border-radius: 10px; border: 1px solid var(--rule); }
 .figure.photo figcaption { text-align: left; max-width: 520px; margin: 10px auto 0; }
 .links-row { font: 13px var(--mono); }
+
+/* design diagrams (not data) */
+.figure.diagram svg { display: block; width: 100%; height: auto; max-width: 680px; }
+.diagram text { font: 11.5px var(--mono); fill: var(--ink-2); }
+.diagram .d-small { font-size: 11px; fill: var(--ink-3); }
+.diagram .d-label { fill: var(--ink-2); }
+.diagram .d-title { font: 600 14px var(--sans); fill: var(--ink); }
+.diagram .d-num { font: 600 13px var(--mono); fill: var(--ink); }
+.diagram .d-done { fill: var(--paper-2); stroke: var(--rule); }
+.diagram .d-done + .d-num { fill: var(--ink-3); }
+.diagram .d-live { fill: var(--accent-soft); stroke: var(--accent); stroke-width: 1.5; }
+.diagram .d-wait { fill: none; stroke: var(--slab-stroke); stroke-dasharray: 4 3; }
+.diagram .d-bracket { fill: none; stroke: var(--accent); stroke-width: 1.5; }
+.diagram .d-arrow { fill: none; stroke: var(--ink-3); stroke-width: 1.5; }
+.diagram .d-arrow.d-strong { stroke: var(--accent); stroke-width: 2; }
+.diagram .d-arrow.d-dashed { stroke-dasharray: 4 3; }
+.diagram .d-box { fill: var(--paper); stroke: var(--slab-stroke); stroke-width: 1.5; }
+.diagram .d-box.d-lead { fill: var(--accent-soft); stroke: var(--accent); }
+.diagram .d-server { fill: var(--paper-2); stroke: var(--rule); }
+.diagram .d-actor { fill: var(--paper); stroke: var(--s1); stroke-width: 2; }
+.diagram .d-actor.d-hot { fill: var(--s1); }
+.note { font: 12.5px/1.5 var(--mono); color: var(--ink-3); border-left: 2px solid var(--rule); padding-left: 12px; }
+
+/* hero identity */
+.id-row { display: flex; align-items: center; gap: 22px; margin-bottom: 22px; }
+.id-row h1 { margin: 6px 0 0; }
+.avatar { width: 104px; height: 104px; border-radius: 50%; object-fit: cover; flex: none; border: 3px solid var(--paper); box-shadow: 0 0 0 1px var(--rule), 0 6px 18px rgba(15, 23, 35, .10); }
+@media (max-width: 520px) {
+  .id-row { gap: 16px; }
+  .id-row h1 { font-size: 38px; white-space: nowrap; }
+  .avatar { width: 76px; height: 76px; }
+}

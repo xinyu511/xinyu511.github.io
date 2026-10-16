@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Distributed Systems Projects</title>
+  <meta name="description" content="Three systems, each about a different way things go wrong across a network: lost packets, crashed leaders, and replicas that disagree.">
+  <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Distributed systems in Go: a transport protocol, Raft, and a replicated store">
+  <meta property="og:description" content="Three systems, each about a different way things go wrong across a network: lost packets, crashed leaders, and replicas that disagree.">
+  <meta property="og:url" content="https://xinyu511.github.io/projects/distributed-systems.html">
+  <meta name="twitter:card" content="summary">
+  <meta name="theme-color" content="#f4f6f9" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0c1016" media="(prefers-color-scheme: dark)">
+  <link rel="canonical" href="https://xinyu511.github.io/projects/distributed-systems.html">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/site.css?v=13">
+</head>
+<body>
+<div class="wrap">
+  <header class="topbar">
+    <a class="home" href="../">← xinyu li</a>
+    <nav><a href="../#work">work</a><a href="../#about">about</a></nav>
+  </header>
+
+  <main class="article">
+    <div class="kicker">Retrieval & systems · CMU 15-440 Distributed Systems · Fall 2024</div>
+    <h1>Distributed systems in Go: a transport protocol, Raft, and a replicated store</h1>
+    <p class="dek">Three systems, each about a different way things go wrong across a network: lost packets, crashed leaders, and replicas that disagree.</p>
+    <div class="meta-row"><span>Transport and key-value store with a partner</span><span>Go · goroutines and channels · net/rpc</span></div>
+    <div class="facts"><div><b>3</b><span>systems</span></div><div><b>105 ms</b><span>Raft heartbeat</span></div><div><b>400–600 ms</b><span>election timeout</span></div><div><b>100 ms</b><span>replica sync batch</span></div></div>
+    
+
+<p class="note">The figures on this page are design diagrams drawn from the code, not measurements. Course rules keep the code itself private.</p>
+
+<h2>A reliable transport protocol on UDP</h2>
+<p>UDP drops, duplicates, and reorders packets. Our protocol gives applications reliable, in-order messages on top of it, with one client implementation and one server that handles many clients. Both sides run as an event loop: a reader goroutine hands packets over channels to a single routine that owns all connection state, so none of it needs locks.</p>
+<ul>
+  <li><strong>Sliding window:</strong> a message goes out only while it fits in the window and the count of unacknowledged messages stays under a cap; the rest wait in a queue that drains as acknowledgements arrive, including cumulative ones.</li>
+  <li><strong>Retransmission</strong> is driven by epochs, with exponential backoff tracked per message.</li>
+  <li><strong>Failure detection:</strong> a peer that stays silent for a set number of epochs is declared lost; connection setup retries the same way.</li>
+  <li><strong>Integrity and order:</strong> the receiver checks size and checksum, drops corrupted messages, and buffers early arrivals until the gap is filled.</li>
+</ul>
+<figure class="figure diagram">
+  <div class="chart-title">Sliding window and retransmission</div>
+  <p class="chart-sub">Window of 4 shown for illustration; the course default is a window of 1.</p>
+  <svg viewBox="0 0 640 190" role="img" aria-label="Message sequence numbers 1 to 12: 1 to 3 acknowledged, 4 to 7 sent inside the window and awaiting acknowledgement, 8 to 12 queued until the window slides. The oldest unacknowledged message is resent with exponential backoff."><defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0L10,5L0,10z" fill="var(--ink-3)"/></marker></defs><rect x="18" y="48" width="44" height="38" rx="5" class="d-done"/><text x="40" y="72" text-anchor="middle" class="d-num">1</text><rect x="69" y="48" width="44" height="38" rx="5" class="d-done"/><text x="91" y="72" text-anchor="middle" class="d-num">2</text><rect x="120" y="48" width="44" height="38" rx="5" class="d-done"/><text x="142" y="72" text-anchor="middle" class="d-num">3</text><rect x="171" y="48" width="44" height="38" rx="5" class="d-live"/><text x="193" y="72" text-anchor="middle" class="d-num">4</text><rect x="222" y="48" width="44" height="38" rx="5" class="d-live"/><text x="244" y="72" text-anchor="middle" class="d-num">5</text><rect x="273" y="48" width="44" height="38" rx="5" class="d-live"/><text x="295" y="72" text-anchor="middle" class="d-num">6</text><rect x="324" y="48" width="44" height="38" rx="5" class="d-live"/><text x="346" y="72" text-anchor="middle" class="d-num">7</text><rect x="375" y="48" width="44" height="38" rx="5" class="d-wait"/><text x="397" y="72" text-anchor="middle" class="d-num">8</text><rect x="426" y="48" width="44" height="38" rx="5" class="d-wait"/><text x="448" y="72" text-anchor="middle" class="d-num">9</text><rect x="477" y="48" width="44" height="38" rx="5" class="d-wait"/><text x="499" y="72" text-anchor="middle" class="d-num">10</text><rect x="528" y="48" width="44" height="38" rx="5" class="d-wait"/><text x="550" y="72" text-anchor="middle" class="d-num">11</text><rect x="579" y="48" width="44" height="38" rx="5" class="d-wait"/><text x="601" y="72" text-anchor="middle" class="d-num">12</text>
+  <path d="M168,38 V30 H372 V38" class="d-bracket"/><text x="270" y="22" text-anchor="middle" class="d-label">window</text>
+  <text x="91" y="108" text-anchor="middle" class="d-small">acknowledged</text>
+  <text x="270" y="108" text-anchor="middle" class="d-small">sent, awaiting ack</text>
+  <text x="474" y="108" text-anchor="middle" class="d-small">queued until the window slides</text>
+  <path d="M193,150 V96" class="d-arrow" marker-end="url(#ah)"/>
+  <text x="203" y="150" class="d-label">oldest unacked: resent each time its backoff expires (1, 2, 4 … epochs)</text>
+  <text x="203" y="170" class="d-small">ack for 4 arrives → window slides right, 8 is sent</text>
+</svg>
+</figure>
+
+<h2>Raft consensus</h2>
+<p>Raft keeps a replicated log consistent while servers crash and restart. I implemented leader election and log replication.</p>
+<ul>
+  <li><strong>Election:</strong> each server is a follower, candidate, or leader, driven by one state-machine goroutine. A follower that hears no heartbeat within a randomized 400–600 ms timeout starts an election; a candidate with votes from a majority becomes leader, and voters refuse candidates whose logs are behind theirs.</li>
+  <li><strong>Replication:</strong> the leader sends heartbeats every 105 ms, tracks how far each follower's log matches its own, backs up on a mismatch, and commits an entry once a majority holds it.</li>
+</ul>
+<figure class="figure diagram">
+  <div class="chart-title">Raft server states</div>
+  <p class="chart-sub">Timings are the values used in my implementation.</p>
+  <svg viewBox="0 0 640 230" role="img" aria-label="Raft states. A follower becomes a candidate after 400 to 600 ms without a heartbeat. A candidate with a majority of votes becomes leader. Candidates and leaders step down to follower on seeing a higher term. The leader sends heartbeats every 105 ms."><defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0L10,5L0,10z" fill="var(--ink-3)"/></marker></defs>
+  <rect x="24" y="90" width="140" height="50" rx="10" class="d-box"/><text x="94" y="120" text-anchor="middle" class="d-title">Follower</text>
+  <rect x="250" y="90" width="140" height="50" rx="10" class="d-box"/><text x="320" y="120" text-anchor="middle" class="d-title">Candidate</text>
+  <rect x="476" y="90" width="140" height="50" rx="10" class="d-box d-lead"/><text x="546" y="120" text-anchor="middle" class="d-title">Leader</text>
+  <path d="M120,88 Q207,40 294,88" class="d-arrow" marker-end="url(#ah)"/><text x="207" y="44" text-anchor="middle" class="d-small">no heartbeat for 400–600 ms</text><text x="207" y="58" text-anchor="middle" class="d-small">(randomized)</text>
+  <path d="M346,88 Q433,40 520,88" class="d-arrow" marker-end="url(#ah)"/><text x="433" y="52" text-anchor="middle" class="d-small">votes from a majority</text>
+  <path d="M294,142 Q207,186 120,142" class="d-arrow" marker-end="url(#ah)"/><text x="207" y="182" text-anchor="middle" class="d-small">sees a higher term</text>
+  <path d="M546,142 Q546,214 320,214 Q94,214 94,142" class="d-arrow" marker-end="url(#ah)"/><text x="320" y="208" text-anchor="middle" class="d-small">sees a higher term</text>
+  <text x="546" y="160" text-anchor="middle" class="d-small">heartbeat every 105 ms</text>
+</svg>
+</figure>
+
+<h2>A replicated key-value store on actors</h2>
+<p>A key-value store spread over several servers, each running a group of actors that own copies of the data and talk only by messages. Clients can read and write at any actor; replicas converge without coordination.</p>
+<ul>
+  <li><strong>Actor runtime pieces:</strong> an unbounded mailbox whose sends never block, and remote messages delivered as asynchronous RPCs.</li>
+  <li><strong>Consistency:</strong> last writer wins, by timestamp with the actor ID as a tie-breaker.</li>
+  <li><strong>Sync:</strong> each actor batches recent writes and sends them every 100 ms to its local peers, but to only one actor on each remote server, which keeps cross-server traffic down.</li>
+  <li><strong>Joining:</strong> a new server announces itself, and existing servers push it their full state.</li>
+</ul>
+<figure class="figure diagram">
+  <div class="chart-title">How replicas sync</div>
+  <p class="chart-sub">Two servers with three actors each, shown for illustration.</p>
+  <svg viewBox="0 0 640 220" role="img" aria-label="Two servers with three actors each. A client writes to one actor on server A. Every 100 ms that actor sends its batch of writes to the other actors on server A and to a single actor on server B, which spreads it locally."><defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0L10,5L0,10z" fill="var(--ink-3)"/></marker></defs>
+  <rect x="16" y="40" width="284" height="150" rx="12" class="d-server"/><text x="30" y="62" class="d-label">Server A</text>
+  <rect x="340" y="40" width="284" height="150" rx="12" class="d-server"/><text x="354" y="62" class="d-label">Server B</text>
+  <circle cx="90" cy="120" r="20" class="d-actor d-hot"/><circle cx="170" cy="92" r="20" class="d-actor"/><circle cx="170" cy="152" r="20" class="d-actor"/>
+  <circle cx="414" cy="120" r="20" class="d-actor"/><circle cx="520" cy="92" r="20" class="d-actor"/><circle cx="520" cy="152" r="20" class="d-actor"/>
+  <path d="M110,113 L148,99" class="d-arrow" marker-end="url(#ah)"/><path d="M110,127 L148,145" class="d-arrow" marker-end="url(#ah)"/>
+  <path d="M110,120 C200,120 300,120 392,120" class="d-arrow d-strong" marker-end="url(#ah)"/>
+  <path d="M434,113 L498,99" class="d-arrow d-dashed" marker-end="url(#ah)"/><path d="M434,127 L498,145" class="d-arrow d-dashed" marker-end="url(#ah)"/>
+  <path d="M90,14 V98" class="d-arrow" marker-end="url(#ah)"/><text x="98" y="22" class="d-small">client Put</text>
+  <text x="250" y="112" text-anchor="middle" class="d-small">one batch per</text><text x="250" y="138" text-anchor="middle" class="d-small">remote server</text>
+  <text x="160" y="208" text-anchor="middle" class="d-small">batched every 100 ms to local peers</text>
+  <text x="480" y="208" text-anchor="middle" class="d-small">spread locally on B</text>
+</svg>
+</figure>
+
+  </main>
+
+  <footer>
+    <a href="../#work">← all work</a>
+    <span>lixinyu@stanford.edu</span>
+  </footer>
+</div>
+<script src="../assets/chart-data.js?v=13"></script>
+<script src="../assets/charts.js?v=13"></script>
+</body>
+</html>
