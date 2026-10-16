@@ -16,7 +16,7 @@ import re
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-V = "9"  # asset cache-busting version
+V = "10"  # asset cache-busting version
 
 LAYERS = {
     "agents": "Agents",
@@ -369,6 +369,12 @@ PROJECTS = [
             meta=["Two-person team; I built the vision pipeline", "Python · YOLO11 · OpenCV · Raspberry Pi 5"],
             facts=[("94.2%", "mAP@0.5, 6 scenarios"), ("9.7 FPS", "detection on CPU"), ("109 ms", "obstacle reaction"), ("50+ min", "battery life")],
             body="""
+<figure class="figure photo">
+  <img src="../assets/img/safefollow-robot.jpg" alt="The finished robot: a tracked base carrying a Raspberry Pi 5 and ultrasonic sensors, two white poles holding a grey basket, and a stereo camera taped under the front of the basket." width="720" height="960" loading="lazy">
+  <figcaption>The final robot. The stereo camera sits under the basket rim, about a meter up; the Pi 5, sensors, and wiring ride on the tracked base.</figcaption>
+</figure>
+<p class="links-row"><a href="https://youtu.be/qM7Re3HG1jc">Final demo video</a> · <a href="https://github.com/xinyu511/18500project_b7/tree/tracking">Code on GitHub</a></p>
+
 <h2>The system</h2>
 <ul>
   <li><strong>Vision (my part):</strong> YOLO11n running on the Pi's CPU, restricted to people, with ByteTrack for tracking. A stable-identity layer re-matches the target by position and a color histogram of the torso, so the robot keeps the same person as its target when tracker IDs change.</li>
@@ -380,6 +386,15 @@ PROJECTS = [
 {{chart:sf-distance|Following distance across trials|Measured distance to the target person in seven runs, against the 1.0–1.5 m design target.}}
 <p>Four of seven runs stayed inside the target band; the others ended at 1.55 m and 1.65 m (too far) and 0.85 m (too close). Detection held mAP@0.5 of 94.2% across six scenarios of 100 labeled images each, and the robot reacted to obstacles in 109 ms on average against a 200 ms requirement. Following worked at walking speeds of 0.2–0.5 m/s and failed at 0.6 m/s and above.</p>
 {{chart:sf-fps|Detection frame rate on the Raspberry Pi 5|Six trials. The original goal was 15 FPS; we relaxed the requirement to 5 FPS.}}
+{{chart:sf-detect|Person detection by scene (unit tests)|mAP@0.5 per test scene against a 90% requirement; heavy occlusion was the one scene that fell short.}}
+
+<h2>Problems I had to solve</h2>
+<ul>
+  <li><strong>YOLO on a CPU.</strong> The first version on the Pi ran at only a few frames per second. Lower input resolution, lighter capture settings, and the smallest model variant all helped, and the final pipeline runs at about 10 FPS. I also designed fallbacks for when full detection can't run every frame: adapting the input resolution and how often boxes are refreshed.</li>
+  <li><strong>A camera without a usable SDK.</strong> The eYs3D stereo camera had no SDK that worked on the Pi, so I found another way to read both views and built depth estimation from the disparity map myself.</li>
+  <li><strong>Version conflicts on the Pi</strong> between the OS, camera drivers, camera libraries, and the robot interface, which had to be untangled before anything ran end to end.</li>
+  <li><strong>Keeping the right person.</strong> Detections alone flicker between people, so the tracker re-matches the target by position and torso color, drops duplicate boxes, and re-locks quickly after a short loss.</li>
+</ul>
 """,
         ),
     ),

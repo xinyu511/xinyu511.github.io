@@ -17,7 +17,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../assets/site.css?v=9">
+  <link rel="stylesheet" href="../assets/site.css?v=10">
 </head>
 <body>
 <div class="wrap">
@@ -33,6 +33,12 @@
     <div class="meta-row"><span>Two-person team; I built the vision pipeline</span><span>Python · YOLO11 · OpenCV · Raspberry Pi 5</span></div>
     <div class="facts"><div><b>94.2%</b><span>mAP@0.5, 6 scenarios</span></div><div><b>9.7 FPS</b><span>detection on CPU</span></div><div><b>109 ms</b><span>obstacle reaction</span></div><div><b>50+ min</b><span>battery life</span></div></div>
     
+
+<figure class="figure photo">
+  <img src="../assets/img/safefollow-robot.jpg" alt="The finished robot: a tracked base carrying a Raspberry Pi 5 and ultrasonic sensors, two white poles holding a grey basket, and a stereo camera taped under the front of the basket." width="720" height="960" loading="lazy">
+  <figcaption>The final robot. The stereo camera sits under the basket rim, about a meter up; the Pi 5, sensors, and wiring ride on the tracked base.</figcaption>
+</figure>
+<p class="links-row"><a href="https://youtu.be/qM7Re3HG1jc">Final demo video</a> · <a href="https://github.com/xinyu511/18500project_b7/tree/tracking">Code on GitHub</a></p>
 
 <h2>The system</h2>
 <ul>
@@ -53,6 +59,19 @@
   <p class="chart-sub">Six trials. The original goal was 15 FPS; we relaxed the requirement to 5 FPS.</p>
   <div data-chart="sf-fps"></div>
 </figure>
+<figure class="figure chart-fig">
+  <div class="chart-title">Person detection by scene (unit tests)</div>
+  <p class="chart-sub">mAP@0.5 per test scene against a 90% requirement; heavy occlusion was the one scene that fell short.</p>
+  <div data-chart="sf-detect"></div>
+</figure>
+
+<h2>Problems I had to solve</h2>
+<ul>
+  <li><strong>YOLO on a CPU.</strong> The first version on the Pi ran at only a few frames per second. Lower input resolution, lighter capture settings, and the smallest model variant all helped, and the final pipeline runs at about 10 FPS. I also designed fallbacks for when full detection can't run every frame: adapting the input resolution and how often boxes are refreshed.</li>
+  <li><strong>A camera without a usable SDK.</strong> The eYs3D stereo camera had no SDK that worked on the Pi, so I found another way to read both views and built depth estimation from the disparity map myself.</li>
+  <li><strong>Version conflicts on the Pi</strong> between the OS, camera drivers, camera libraries, and the robot interface, which had to be untangled before anything ran end to end.</li>
+  <li><strong>Keeping the right person.</strong> Detections alone flicker between people, so the tracker re-matches the target by position and torso color, drops duplicate boxes, and re-locks quickly after a short loss.</li>
+</ul>
 
   </main>
 
@@ -61,7 +80,7 @@
     <span>lixinyu@stanford.edu</span>
   </footer>
 </div>
-<script src="../assets/chart-data.js?v=9"></script>
-<script src="../assets/charts.js?v=9"></script>
+<script src="../assets/chart-data.js?v=10"></script>
+<script src="../assets/charts.js?v=10"></script>
 </body>
 </html>

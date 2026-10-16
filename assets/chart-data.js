@@ -210,6 +210,17 @@ window.CHART_DATA = {
     height: 200,
   },
 
+  // 18-500 team status report 04-25, Table 2 (unit tests), YOLO detection row.
+  "sf-detect": {
+    kind: "bars",
+    alt: "Person detection mAP@0.5 by scene: classroom 93%, hallway 95%, multiple people 91%, heavy occlusion 89%, side angle 94%.",
+    categories: ["Classroom", "Hallway", "Multiple people", "Heavy occlusion", "Side angle"],
+    series: [{ name: "mAP@0.5", slots: [1, 1, 1, 2, 1], values: [0.93, 0.95, 0.91, 0.89, 0.94] }],
+    legend: [{ name: "Meets the 90% requirement", slot: 1, kind: "rect" }, { name: "Below it", slot: 2, kind: "rect" }],
+    x: { min: 0, max: 1, ticks: [0, 0.25, 0.5, 0.75, 1], fmt: "pct0" },
+    height: 200,
+  },
+
   // MCM 2025 paper, Table "Predictions of the optimized tourism plan for the next 5 years".
   "mcm-plan": {
     kind: "xy",

@@ -290,3 +290,8 @@ a.thumb:hover { border-color: var(--accent); transform: translateY(-1px); }
   .timeline li.has-logo .when { grid-column: 2; }
   .timeline li.has-logo .what { grid-column: 2; }
 }
+
+.figure.photo { text-align: center; }
+.figure.photo img { max-width: min(380px, 100%); margin: 0 auto; border-radius: 10px; border: 1px solid var(--rule); }
+.figure.photo figcaption { text-align: left; max-width: 520px; margin: 10px auto 0; }
+.links-row { font: 13px var(--mono); }
