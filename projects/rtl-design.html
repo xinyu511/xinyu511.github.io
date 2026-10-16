@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>RTL Design Projects</title>
+  <meta name="description" content="Three designs from the same course, each about a different constraint: timing and memory bandwidth, fairness under contention, and getting every bit of a protocol right.">
+  <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="RTL design: an FPGA accelerator, a network-on-chip, and USB">
+  <meta property="og:description" content="Three designs from the same course, each about a different constraint: timing and memory bandwidth, fairness under contention, and getting every bit of a protocol right.">
+  <meta property="og:url" content="https://xinyu511.github.io/projects/rtl-design.html">
+  <meta name="twitter:card" content="summary">
+  <meta name="theme-color" content="#f4f6f9" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0c1016" media="(prefers-color-scheme: dark)">
+  <link rel="canonical" href="https://xinyu511.github.io/projects/rtl-design.html">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/site.css?v=9">
+</head>
+<body>
+<div class="wrap">
+  <header class="topbar">
+    <a class="home" href="../">← xinyu li</a>
+    <nav><a href="../#work">work</a><a href="../#about">about</a></nav>
+  </header>
+
+  <main class="article">
+    <div class="kicker">Hardware · CMU 18-341 Logic Design and Verification · Fall 2025</div>
+    <h1>RTL design: an FPGA accelerator, a network-on-chip, and USB</h1>
+    <p class="dek">Three designs from the same course, each about a different constraint: timing and memory bandwidth, fairness under contention, and getting every bit of a protocol right.</p>
+    <div class="meta-row"><span>Accelerator and NoC individual; USB with a partner</span><span>SystemVerilog · Vivado · Synopsys VCS</span></div>
+    <div class="facts"><div><b>100 MHz</b><span>on a Spartan-7</span></div><div><b>32</b><span>parallel multipliers</span></div><div><b>24</b><span>arbiter states per port</span></div><div><b>10,000</b><span>packets in the performance test</span></div></div>
+    
+
+<h2>Matrix-vector accelerator on an FPGA</h2>
+<p>The design computes Y = A·B + C for a 128×128 matrix of 8-bit values on a Spartan-7 board. Sixteen dual-port block-RAM banks deliver 32 matrix elements per cycle to 32 parallel multipliers, followed by an adder tree and an accumulator. An extra register stage between the RAMs and the multipliers was what closed timing: the routed design meets 100 MHz with 0.70 ns of worst-case slack.</p>
+<figure class="figure chart-fig">
+  <div class="chart-title">FPGA resources used</div>
+  <p class="chart-sub">Placed design on the xc7s50 Spartan-7. Block RAM is the limiting resource: feeding 32 multipliers per cycle takes nearly all of it.</p>
+  <div data-chart="mm-util"></div>
+</figure>
+
+<h2>Network-on-chip</h2>
+<p>Six nodes connected through two routers. Each node splits 32-bit packets into 8-bit flits and reassembles them on the way out with a pair of FSMs and a small FIFO. Each router output port arbitrates between four inputs with a rotating-priority FSM that has one state per priority order (24 states), so no input can be starved. The design passes every course test, including broadcast, stress, fairness, and a 10,000-packet performance test that it completes in 15,931 cycles.</p>
+
+<h2>USB host, bit layer</h2>
+<p>With a partner, a USB host that reads and writes a device over the bus. I built the bit-level path: bit stuffing and unstuffing, NRZI encoding and decoding, driving and sampling the differential lines, bitstream decoding, and the read/write transaction FSM.</p>
+
+  </main>
+
+  <footer>
+    <a href="../#work">← all work</a>
+    <span>lixinyu@stanford.edu</span>
+  </footer>
+</div>
+<script src="../assets/chart-data.js?v=9"></script>
+<script src="../assets/charts.js?v=9"></script>
+</body>
+</html>

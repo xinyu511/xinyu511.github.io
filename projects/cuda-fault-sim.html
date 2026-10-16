@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CUDA Fault Simulator</title>
+  <meta name="description" content="Automatic test pattern generation can be posed as gradient descent over a probabilistic circuit simulator. That only pays off if the simulator is fast. We moved it onto the GPU.">
+  <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="A CUDA differentiable fault simulator">
+  <meta property="og:description" content="Automatic test pattern generation can be posed as gradient descent over a probabilistic circuit simulator. That only pays off if the simulator is fast. We moved it onto the GPU.">
+  <meta property="og:url" content="https://xinyu511.github.io/projects/cuda-fault-sim.html">
+  <meta name="twitter:card" content="summary">
+  <meta name="theme-color" content="#f4f6f9" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0c1016" media="(prefers-color-scheme: dark)">
+  <link rel="canonical" href="https://xinyu511.github.io/projects/cuda-fault-sim.html">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/site.css?v=9">
+</head>
+<body>
+<div class="wrap">
+  <header class="topbar">
+    <a class="home" href="../">← xinyu li</a>
+    <nav><a href="../#work">work</a><a href="../#about">about</a></nav>
+  </header>
+
+  <main class="article">
+    <div class="kicker">Kernels & compilers · CMU 15-418 Parallel Computer Architecture · Spring 2025</div>
+    <h1>A CUDA differentiable fault simulator</h1>
+    <p class="dek">Automatic test pattern generation can be posed as gradient descent over a probabilistic circuit simulator. That only pays off if the simulator is fast. We moved it onto the GPU.</p>
+    <div class="meta-row"><span>Two-person team, equal split</span><span>CUDA · C++ · PyTorch extensions · RTX 4060</span></div>
+    <div class="facts"><div><b>25.4×</b><span>speedup on c7552</span></div><div><b>41,333</b><span>gates in the largest circuit</span></div><div><b>25 µs</b><span>fastest kernel, 128 threads</span></div><div><b>338 GB/s</b><span>of 360 GB/s peak</span></div></div>
+    
+
+<h2>The problem</h2>
+<p>A differentiable fault simulator computes, for every gate, the probability of each logic value and of a stuck-at fault being observable, so test patterns can be optimized by gradient descent. The baseline was written in Python on a graph library (DGL).</p>
+
+<h2>What we built</h2>
+<ul>
+  <li><strong>Custom CUDA kernels</strong> for logic-value propagation and fault-observability propagation, called from PyTorch through a C++ extension so gradients still flow.</li>
+  <li><strong>A layer-by-layer schedule:</strong> one kernel launch per topological level, one thread per gate, so every gate's inputs are ready when it runs.</li>
+  <li><strong>A flat circuit layout:</strong> gates as arrays with fan-ins in CSR form, a switch over 16 gate types, and input patterns processed in batches.</li>
+  <li><strong>A dead end, measured:</strong> a dependency-table version that dropped the level ordering was 38% slower, limited by memory bandwidth, and we abandoned it.</li>
+</ul>
+
+<h2>Results</h2>
+<figure class="figure chart-fig">
+  <div class="chart-title">Speedup over the CPU baseline vs. CUDA block size</div>
+  <p class="chart-sub">End-to-end forward pass at batch size 64, four benchmark circuits.</p>
+  <div data-chart="faultsim-block"></div>
+</figure>
+<p>All four circuits peak between 128 and 256 threads per block. Kernel time is lowest at 128 threads (25 µs, against 52 µs at 32 threads) and 11% slower at 512. Speedup grows almost linearly with batch size up to 32 and peaks at batch 64, where the kernels use 338 of the GPU's 360 GB/s of memory bandwidth, so the simulator ends up bandwidth-bound rather than compute-bound.</p>
+
+  </main>
+
+  <footer>
+    <a href="../#work">← all work</a>
+    <span>lixinyu@stanford.edu</span>
+  </footer>
+</div>
+<script src="../assets/chart-data.js?v=9"></script>
+<script src="../assets/charts.js?v=9"></script>
+</body>
+</html>

@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MM-HDL Project</title>
+  <meta name="description" content="A Verilog module can be read as code, as a dataflow graph, or through a plain-English description. We asked whether a model does better when it sees more than one of them.">
+  <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Multimodal representations of hardware designs">
+  <meta property="og:description" content="A Verilog module can be read as code, as a dataflow graph, or through a plain-English description. We asked whether a model does better when it sees more than one of them.">
+  <meta property="og:url" content="https://xinyu511.github.io/projects/mm-hdl.html">
+  <meta name="twitter:card" content="summary">
+  <meta name="theme-color" content="#f4f6f9" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0c1016" media="(prefers-color-scheme: dark)">
+  <link rel="canonical" href="https://xinyu511.github.io/projects/mm-hdl.html">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/site.css?v=9">
+</head>
+<body>
+<div class="wrap">
+  <header class="topbar">
+    <a class="home" href="../">← xinyu li</a>
+    <nav><a href="../#work">work</a><a href="../#about">about</a></nav>
+  </header>
+
+  <main class="article">
+    <div class="kicker">Models · CMU 11-777 Multimodal ML · Spring 2026</div>
+    <h1>Multimodal representations of hardware designs</h1>
+    <p class="dek">A Verilog module can be read as code, as a dataflow graph, or through a plain-English description. We asked whether a model does better when it sees more than one of them.</p>
+    <div class="meta-row"><span>Team of four; my part is described below</span><span>Python · PyTorch · Qwen3</span></div>
+    <div class="facts"><div><b>14,167</b><span>Verilog designs</span></div><div><b>8</b><span>circuit categories</span></div><div><b>3</b><span>views per design</span></div><div><b>1,424</b><span>held-out test designs</span></div></div>
+    
+
+<h2>The setup</h2>
+<p>Each design in our dataset (curated from the public BRIDGES corpus) comes with its Verilog code, the design's dataflow graph, a natural-language description, and one of eight category labels. We studied two tasks: finding the right design for a description, and classifying a design into its category.</p>
+
+<h2>My part</h2>
+<ul>
+  <li><strong>The LLM classification benchmark.</strong> Qwen3-8B, zero-shot, given the code, the graph, or both, with prompts that restrict the answer to one category name, constrained decoding, and tracking of inputs truncated by the context window.</li>
+  <li><strong>The error analysis.</strong> Confusion matrices and an overlap study of which designs each input view gets right. This is where the case for combining views came from.</li>
+  <li><strong>Pieces of the trained model.</strong> A graph-only pretraining stage with warm start for the graph encoder, a padding-aware pooling fix, and the cross-attention fusion experiments.</li>
+</ul>
+
+<h2>What the baselines showed</h2>
+<figure class="figure chart-fig">
+  <div class="chart-title">Qwen3-8B zero-shot, 8-way classification</div>
+  <p class="chart-sub">1,424 held-out designs. Adding the graph to the code helps a little on accuracy and more on macro-F1.</p>
+  <div data-chart="mmhdl-modality"></div>
+</figure>
+<p>Neither view dominates. The graph alone is weaker overall, yet it is the only view that gets 130 designs right, so the two carry different information.</p>
+<figure class="figure chart-fig">
+  <div class="chart-title">Which input lets the model classify each design correctly</div>
+  <p class="chart-sub">Count of test designs by the set of input views that produced a correct answer.</p>
+  <div data-chart="mmhdl-overlap"></div>
+</figure>
+
+<h2>Where the team landed</h2>
+<p>The trained model encodes the graph with a graph attention network, fuses it with the code, and aligns the result with description embeddings using a contrastive loss. On description-to-design search over the full pool, the team's gated-fusion model reached recall@1 of 0.696, against 0.396 for BM25 over code and graph text. Those retrieval results are my teammates' work; the cross-attention variant I ran was still in progress at the poster session.</p>
+
+  </main>
+
+  <footer>
+    <a href="../#work">← all work</a>
+    <span>lixinyu@stanford.edu</span>
+  </footer>
+</div>
+<script src="../assets/chart-data.js?v=9"></script>
+<script src="../assets/charts.js?v=9"></script>
+</body>
+</html>

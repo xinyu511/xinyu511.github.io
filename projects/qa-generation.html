@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Long-Document QA</title>
+  <meta name="description" content="Two pipelines over long articles: one answers questions about the text, the other writes questions a reader could ask.">
+  <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Question answering and generation over long documents">
+  <meta property="og:description" content="Two pipelines over long articles: one answers questions about the text, the other writes questions a reader could ask.">
+  <meta property="og:url" content="https://xinyu511.github.io/projects/qa-generation.html">
+  <meta name="twitter:card" content="summary">
+  <meta name="theme-color" content="#f4f6f9" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0c1016" media="(prefers-color-scheme: dark)">
+  <link rel="canonical" href="https://xinyu511.github.io/projects/qa-generation.html">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/site.css?v=9">
+</head>
+<body>
+<div class="wrap">
+  <header class="topbar">
+    <a class="home" href="../">← xinyu li</a>
+    <nav><a href="../#work">work</a><a href="../#about">about</a></nav>
+  </header>
+
+  <main class="article">
+    <div class="kicker">Models · CMU NLP course · Fall 2023</div>
+    <h1>Question answering and generation over long documents</h1>
+    <p class="dek">Two pipelines over long articles: one answers questions about the text, the other writes questions a reader could ask.</p>
+    <div class="meta-row"><span>Two-person course project</span><span>Python · PyTorch · Hugging Face</span></div>
+    <div class="facts"><div><b>0.978</b><span>question-type F1</span></div><div><b>0.811</b><span>yes/no answer F1</span></div><div><b>0.763</b><span>span answer F1</span></div><div><b>79%</b><span>generated questions judged sensible</span></div></div>
+    
+
+<h2>Answering</h2>
+<p>Articles are much longer than the passages the models were trained on, so the pipeline first narrows them down. TF-IDF vectors and cosine similarity pick the passages most relevant to the question. A fine-tuned BERT classifier then decides whether the question is yes/no or asks for a span. Yes/no questions go to a T5-small fine-tuned on BoolQ; the rest go to a T5-small fine-tuned on SQuAD that extracts the answer span. Fine-tuning BERT on SQuAD for the span task gave much lower exact match than T5, so we kept T5.</p>
+
+<h2>Generating</h2>
+<p>YAKE extracts keywords from the passage; a T5-small fine-tuned on SQuAD treats each keyword as an answer and writes a question for it. We also tried few-shot prompting Llama-2 for both tasks and dropped it: it was slow and its output format was hard to control.</p>
+
+<h2>Results</h2>
+<figure class="figure chart-fig">
+  <div class="chart-title">Validation scores for both pipelines</div>
+  <p class="chart-sub">Answering on BoolQ / SQuAD validation sets; generation on SQuAD validation, with grammaticality from LanguageTool and sensibleness from a manual check of 100 sampled questions.</p>
+  <div data-chart="nlp-metrics"></div>
+</figure>
+<p>The main failure we saw was questions that need implicit reasoning across sentences: the answering models only extract or classify, so they can't combine facts the text never states together. Dense passage retrieval was the next step we did not get to.</p>
+
+  </main>
+
+  <footer>
+    <a href="../#work">← all work</a>
+    <span>lixinyu@stanford.edu</span>
+  </footer>
+</div>
+<script src="../assets/chart-data.js?v=9"></script>
+<script src="../assets/charts.js?v=9"></script>
+</body>
+</html>

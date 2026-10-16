@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SafeFollow Robot</title>
+  <meta name="description" content="An assistive robot that follows an older adult. It has to keep the right person in view, keep its distance, and stop in time.">
+  <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="SafeFollow: a robot that follows a person and avoids obstacles">
+  <meta property="og:description" content="An assistive robot that follows an older adult. It has to keep the right person in view, keep its distance, and stop in time.">
+  <meta property="og:url" content="https://xinyu511.github.io/projects/safefollow.html">
+  <meta name="twitter:card" content="summary">
+  <meta name="theme-color" content="#f4f6f9" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0c1016" media="(prefers-color-scheme: dark)">
+  <link rel="canonical" href="https://xinyu511.github.io/projects/safefollow.html">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/site.css?v=9">
+</head>
+<body>
+<div class="wrap">
+  <header class="topbar">
+    <a class="home" href="../">← xinyu li</a>
+    <nav><a href="../#work">work</a><a href="../#about">about</a></nav>
+  </header>
+
+  <main class="article">
+    <div class="kicker">Hardware · CMU 18-500 ECE Capstone · Spring 2026</div>
+    <h1>SafeFollow: a robot that follows a person and avoids obstacles</h1>
+    <p class="dek">An assistive robot that follows an older adult. It has to keep the right person in view, keep its distance, and stop in time.</p>
+    <div class="meta-row"><span>Two-person team; I built the vision pipeline</span><span>Python · YOLO11 · OpenCV · Raspberry Pi 5</span></div>
+    <div class="facts"><div><b>94.2%</b><span>mAP@0.5, 6 scenarios</span></div><div><b>9.7 FPS</b><span>detection on CPU</span></div><div><b>109 ms</b><span>obstacle reaction</span></div><div><b>50+ min</b><span>battery life</span></div></div>
+    
+
+<h2>The system</h2>
+<ul>
+  <li><strong>Vision (my part):</strong> YOLO11n running on the Pi's CPU, restricted to people, with ByteTrack for tracking. A stable-identity layer re-matches the target by position and a color histogram of the torso, so the robot keeps the same person as its target when tracker IDs change.</li>
+  <li><strong>Distance:</strong> stereo depth from the eYs3D camera with OpenCV block matching, falling back to an estimate from the bounding-box size.</li>
+  <li><strong>Control:</strong> a PID loop holding about 1.25 m, three ultrasonic sensors with caution and stop thresholds, and a four-state machine: follow, avoid, search, stop. My partner built the drive base and motor control.</li>
+</ul>
+
+<h2>Testing</h2>
+<figure class="figure chart-fig">
+  <div class="chart-title">Following distance across trials</div>
+  <p class="chart-sub">Measured distance to the target person in seven runs, against the 1.0–1.5 m design target.</p>
+  <div data-chart="sf-distance"></div>
+</figure>
+<p>Four of seven runs stayed inside the target band; the others ended at 1.55 m and 1.65 m (too far) and 0.85 m (too close). Detection held mAP@0.5 of 94.2% across six scenarios of 100 labeled images each, and the robot reacted to obstacles in 109 ms on average against a 200 ms requirement. Following worked at walking speeds of 0.2–0.5 m/s and failed at 0.6 m/s and above.</p>
+<figure class="figure chart-fig">
+  <div class="chart-title">Detection frame rate on the Raspberry Pi 5</div>
+  <p class="chart-sub">Six trials. The original goal was 15 FPS; we relaxed the requirement to 5 FPS.</p>
+  <div data-chart="sf-fps"></div>
+</figure>
+
+  </main>
+
+  <footer>
+    <a href="../#work">← all work</a>
+    <span>lixinyu@stanford.edu</span>
+  </footer>
+</div>
+<script src="../assets/chart-data.js?v=9"></script>
+<script src="../assets/charts.js?v=9"></script>
+</body>
+</html>

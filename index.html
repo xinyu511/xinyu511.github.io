@@ -17,7 +17,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/site.css?v=2">
+  <link rel="stylesheet" href="assets/site.css?v=9">
   <noscript><style>.stack{display:block}.stack-labels li{position:static;transform:none;margin:6px 0}</style></noscript>
 </head>
 <body>
@@ -106,93 +106,142 @@
     </div>
     <div class="filter-status" aria-live="polite"></div>
 
+<!-- work:start -->
     <article class="work" data-layer="agents" data-areas="agentic llm-agents ai-infra">
-      <div class="work-meta"><span class="layer">Agents</span><br>ByteDance<br>Jul – Sep 2026 · intern</div>
+      <div class="work-meta"><div class="thumb" aria-hidden="true"><svg viewBox="0 0 120 72" aria-hidden="true" class="thumb-art">
+  <circle cx="30" cy="26" r="9" fill="var(--s1)"/><circle cx="60" cy="14" r="9" fill="var(--s2)"/><circle cx="90" cy="26" r="9" fill="var(--s3)"/>
+  <path d="M39 22 Q45 15 51 15" fill="none" stroke="var(--ink-3)" stroke-width="1.6" stroke-linecap="round"/>
+  <path d="M69 15 Q75 15 81 22" fill="none" stroke="var(--ink-3)" stroke-width="1.6" stroke-linecap="round"/>
+  <path d="M86 35 Q60 52 34 35" fill="none" stroke="var(--ink-3)" stroke-width="1.6" stroke-linecap="round" stroke-dasharray="3 3"/>
+  <rect x="44" y="52" width="32" height="12" rx="3" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.2"/>
+</svg></div><span class="layer">Agents</span><br>ByteDance<br>Jul – Sep 2026 · intern</div>
       <div>
         <h3>An agent loop that tunes an ads calibration system</h3>
         <p>Replaced manual tuning of an ad-outcome calibration system with a dynamic agentic optimization loop. I also built a self-evolving skill subsystem: execution outcomes become versioned skill definitions, stored in distributed storage that runtime agents read directly instead of going through the API tier.</p>
-        <div class="tags"><span class="tag">agents</span><span class="tag">skill memory</span><span class="tag">distributed storage</span></div>
+        <div class="tags"><span class="tag">LLM agents</span><span class="tag">skill memory</span><span class="tag">distributed storage</span></div>
       </div>
     </article>
 
     <article class="work" data-layer="models" data-areas="llm conversational llm-agents inference">
-      <div class="work-meta"><span class="layer">Models</span><br>Stanford CS329X<br>Oct 2026 – now</div>
+      <div class="work-meta"><a class="thumb" href="projects/persona-stability.html" aria-label="Open the write-up: Why role-play LLMs drift in long conversations"><div data-chart="persona-dyad-qwen" data-mode="thumb"></div></a><span class="layer">Models</span><br>Stanford CS329X<br>Oct 2026 – now</div>
       <div>
         <h3><a href="projects/persona-stability.html">Why role-play LLMs drift in long conversations</a></h3>
-        <p>Over 40+ turns, persona-conditioned LLMs stop sounding like their character. We found the failure looks like <em>imitation, not forgetting</em>: the model copies its own and its partner's earlier lines while still answering persona facts correctly. I built the harness: KV-cache-reusing MLX/HF backends, decoding-time interventions, and a blind LLM judge calibrated with planted errors.</p>
-        <ul class="stats">
-          <li><b>~225</b>dialogues generated</li>
-          <li><b>~500</b>blind-judged chunks</li>
-          <li><b>24/24</b>persona facts still correct at turn 39</li>
-        </ul>
+        <p>Over 40+ turns, persona-conditioned LLMs stop sounding like their character. We found the failure looks like imitation, not forgetting: the model copies its own and its partner's earlier lines while still answering persona facts correctly. I built the harness: KV-cache-reusing MLX and Hugging Face backends, decoding-time interventions, and a blind LLM judge calibrated with planted errors.</p>
+        <ul class="stats"><li><b>~225</b>dialogues generated</li><li><b>24/24</b>persona facts still correct at turn 39</li></ul>
         <div class="tags"><span class="tag">Qwen3</span><span class="tag">logit / attention steering</span><span class="tag">LLM-as-judge</span><span class="tag">MLX · HF</span></div>
         <a class="more" href="projects/persona-stability.html">Read the write-up →</a>
       </div>
     </article>
 
-    <article class="work" data-layer="models" data-areas="llm ir">
-      <div class="work-meta"><span class="layer">Models</span><br>CMU NLP course<br>Fall 2023</div>
+    <article class="work" data-layer="models" data-areas="llm mlsys">
+      <div class="work-meta"><a class="thumb" href="projects/mm-hdl.html" aria-label="Open the write-up: Multimodal representations of hardware designs"><div data-chart="mmhdl-modality" data-mode="thumb"></div></a><span class="layer">Models</span><br>CMU 11-777, team of 4<br>Spring 2026</div>
       <div>
-        <h3>Question answering and generation over long documents</h3>
-        <p>A two-person NLP course project. To answer a question about a long article, TF-IDF retrieval picks the relevant passages, a BERT classifier routes yes/no versus open questions, and fine-tuned T5 models answer each type. To generate questions, YAKE keywords become answers that a fine-tuned T5 writes questions for. Few-shot Llama-2 was tried and dropped as too slow and hard to control.</p>
-        <ul class="stats">
-          <li><b>0.811</b>F1 on yes/no questions (BoolQ)</li>
-          <li><b>0.763</b>F1 on span answers (SQuAD)</li>
-          <li><b>79%</b>of sampled generated questions made sense</li>
-        </ul>
-        <div class="tags"><span class="tag">T5</span><span class="tag">BERT</span><span class="tag">TF-IDF retrieval</span><span class="tag">PyTorch</span></div>
-      </div>
-    </article>
-
-    <article class="work" data-layer="retrieval" data-areas="ir sys">
-      <div class="work-meta"><span class="layer">Retrieval &amp; systems</span><br>CMU STAR Lab<br>Feb 2025 – May 2026</div>
-      <div>
-        <h3>Measuring who vector search fails</h3>
-        <p>Approximate nearest-neighbor search in pgvector returns good results for some groups of queries and poor results for others. I built the lab's offline measurement pipeline on ann-benchmarks: pgvector HNSW in Docker, swept over index settings, recording recall@10 per query and comparing recall across KMeans clusters of the query space. I added new workloads (GloVe, CIFAR embeddings, FairFace, DBpedia), co-designed the lab's adaptive loop that retunes search per query cluster at runtime, and helped build its monitor. Advised by Prof. Akshitha Sriraman.</p>
-        <ul class="stats">
-          <li><b>56%</b>of GloVe-100 queries below 0.9 recall@10 at ef_search 10</li>
-          <li><b>10k</b>queries per sweep, 8 search settings</li>
-        </ul>
-        <div class="tags"><span class="tag">pgvector</span><span class="tag">HNSW</span><span class="tag">ann-benchmarks</span><span class="tag">Docker</span></div>
-      </div>
-    </article>
-
-    <article class="work" data-layer="kernels" data-areas="gpus mlsys inference">
-      <div class="work-meta"><span class="layer">Kernels &amp; compilers</span><br>CMU Catalyst Lab<br>May – Aug 2025</div>
-      <div>
-        <h3>A tensor-kernel compiler for NVIDIA Blackwell</h3>
-        <p>Built a compiler for B200 GPUs on TVM with custom scheduling, prototyping codegen passes and reproducible performance harnesses. I tuned matmul through tiling, tensor memory (TMEM), and thread-block cluster launch in PTX 8.7. Advised by Prof. Tianqi Chen.</p>
-        <ul class="stats">
-          <li><b>97%</b>of ThunderKittens matmul throughput</li>
-        </ul>
-        <div class="tags"><span class="tag">CUDA</span><span class="tag">PTX</span><span class="tag">TVM</span><span class="tag">B200</span></div>
+        <h3><a href="projects/mm-hdl.html">Multimodal representations of hardware designs</a></h3>
+        <p>Can a model understand a Verilog design better by reading its code and its dataflow graph together? Our team learned joint embeddings of 14,167 designs for description search and circuit-type classification. I built the LLM classification benchmark and its error analysis, plus graph-encoder pretraining for the trained model.</p>
+        <ul class="stats"><li><b>0.652</b>Qwen3-8B zero-shot accuracy with code + graph</li><li><b>130</b>designs only the graph input gets right</li></ul>
+        <div class="tags"><span class="tag">Qwen3-8B</span><span class="tag">graph attention</span><span class="tag">contrastive learning</span><span class="tag">Verilog</span></div>
+        <a class="more" href="projects/mm-hdl.html">Read the write-up →</a>
       </div>
     </article>
 
     <article class="work" data-layer="models" data-areas="mlsys gpus">
-      <div class="work-meta"><span class="layer">Models</span><br>CMU, Moura group<br>May 2025 – 2026</div>
+      <div class="work-meta"><a class="thumb" href="projects/amortized-estimators.html" aria-label="Open the write-up: One network pass instead of thousands of Monte Carlo samples"><div data-chart="nncert-flops" data-mode="thumb"></div></a><span class="layer">Models</span><br>CMU, Moura group<br>May 2025 – 2026</div>
       <div>
-        <h3>Amortized neural estimators instead of Monte Carlo</h3>
-        <p>Trained small surrogate networks to predict what thousands of Monte Carlo samples would, for probabilistic prediction and robustness certification. Ran the large-scale comparisons on GPU clusters and AWS Trainium, and introduced an L1-based fidelity metric.</p>
-        <ul class="stats">
-          <li><b>~100×</b>FLOP efficiency at comparable accuracy</li>
-        </ul>
-        <div class="tags"><span class="tag">PyTorch</span><span class="tag">Trainium</span><span class="tag">Hydra</span></div>
+        <h3><a href="projects/amortized-estimators.html">One network pass instead of thousands of Monte Carlo samples</a></h3>
+        <p>Certifying a classifier's robustness usually means hundreds to thousands of noisy forward passes per input. We trained a small network that predicts the Monte Carlo answer in one pass. I built the vote-dataset pipeline, ran the cost comparisons on GPU servers, and ported training to AWS Trainium.</p>
+        <ul class="stats"><li><b>100×+</b>fewer FLOPs than Monte Carlo at matched error</li><li><b>4</b>datasets: MNIST, Fashion-MNIST, KMNIST, CIFAR-10</li></ul>
+        <div class="tags"><span class="tag">PyTorch Lightning</span><span class="tag">Hydra</span><span class="tag">AWS Trainium</span><span class="tag">randomized smoothing</span></div>
+        <a class="more" href="projects/amortized-estimators.html">Read the write-up →</a>
+      </div>
+    </article>
+
+    <article class="work" data-layer="models" data-areas="llm ir">
+      <div class="work-meta"><a class="thumb" href="projects/qa-generation.html" aria-label="Open the write-up: Question answering and generation over long documents"><div data-chart="nlp-metrics" data-mode="thumb"></div></a><span class="layer">Models</span><br>CMU NLP course, team of 2<br>Fall 2023</div>
+      <div>
+        <h3><a href="projects/qa-generation.html">Question answering and generation over long documents</a></h3>
+        <p>To answer a question about a long article, TF-IDF retrieval picks the relevant passages, a BERT classifier routes yes/no versus open questions, and fine-tuned T5 models answer each type. A second pipeline turns extracted keywords into questions with another fine-tuned T5.</p>
+        <ul class="stats"><li><b>0.811</b>F1 on yes/no questions (BoolQ)</li><li><b>0.763</b>F1 on span answers (SQuAD)</li></ul>
+        <div class="tags"><span class="tag">T5</span><span class="tag">BERT</span><span class="tag">TF-IDF retrieval</span><span class="tag">PyTorch</span></div>
+        <a class="more" href="projects/qa-generation.html">Read the write-up →</a>
+      </div>
+    </article>
+
+    <article class="work" data-layer="retrieval" data-areas="ir sys">
+      <div class="work-meta"><a class="thumb" href="projects/vector-recall.html" aria-label="Open the write-up: Measuring who vector search fails"><div data-chart="star-tail" data-mode="thumb"></div></a><span class="layer">Retrieval &amp; systems</span><br>CMU STAR Lab<br>Feb 2025 – May 2026</div>
+      <div>
+        <h3><a href="projects/vector-recall.html">Measuring who vector search fails</a></h3>
+        <p>Approximate nearest-neighbor search in pgvector returns good results for some groups of queries and poor results for others. I built the lab's offline measurement pipeline, added new workloads, co-designed the lab's adaptive loop that retunes search per query cluster at runtime, and helped build its monitor. Advised by Prof. Akshitha Sriraman.</p>
+        <ul class="stats"><li><b>56%</b>of GloVe-100 queries below 0.9 recall@10 at ef_search 10</li><li><b>0.16</b>recall gap between query clusters</li></ul>
+        <div class="tags"><span class="tag">pgvector</span><span class="tag">HNSW</span><span class="tag">ann-benchmarks</span><span class="tag">Docker</span></div>
+        <a class="more" href="projects/vector-recall.html">Read the write-up →</a>
+      </div>
+    </article>
+
+    <article class="work" data-layer="kernels" data-areas="gpus mlsys inference">
+      <div class="work-meta"><div class="thumb" aria-hidden="true"><div data-chart="bw-matmul" data-mode="thumb"></div></div><span class="layer">Kernels &amp; compilers</span><br>CMU Catalyst Lab<br>May – Aug 2025</div>
+      <div>
+        <h3>A tensor-kernel compiler for NVIDIA Blackwell</h3>
+        <p>Built a compiler for B200 GPUs on TVM with custom scheduling and prototyped codegen passes. Tuned matmul through tile sizes, memory movement, and kernel fusion in PTX and CUDA.</p>
+        <ul class="stats"><li><b>97%</b>of ThunderKittens matmul throughput</li></ul>
+        <div class="tags"><span class="tag">CUDA</span><span class="tag">PTX</span><span class="tag">TVM</span><span class="tag">B200</span></div>
+      </div>
+    </article>
+
+    <article class="work" data-layer="kernels" data-areas="gpus sys">
+      <div class="work-meta"><a class="thumb" href="projects/cuda-fault-sim.html" aria-label="Open the write-up: A CUDA differentiable fault simulator"><div data-chart="faultsim-block" data-mode="thumb"></div></a><span class="layer">Kernels &amp; compilers</span><br>CMU 15-418, team of 2<br>Spring 2025</div>
+      <div>
+        <h3><a href="projects/cuda-fault-sim.html">A CUDA differentiable fault simulator</a></h3>
+        <p>Gradient-based test generation for chips needs a fault simulator that runs inside PyTorch. We replaced a graph-library implementation with custom CUDA kernels that propagate logic values and fault observability layer by layer, one thread per gate.</p>
+        <ul class="stats"><li><b>25.4×</b>faster than the CPU baseline on c7552</li><li><b>94%</b>of peak memory bandwidth at batch 64</li></ul>
+        <div class="tags"><span class="tag">CUDA</span><span class="tag">C++</span><span class="tag">PyTorch extensions</span><span class="tag">RTX 4060</span></div>
+        <a class="more" href="projects/cuda-fault-sim.html">Read the write-up →</a>
       </div>
     </article>
 
     <article class="work" data-layer="hardware" data-areas="">
-      <div class="work-meta"><span class="layer">Hardware</span><br>CMU 18-447, team of 4<br>Spring 2025</div>
+      <div class="work-meta"><a class="thumb" href="projects/branch-prediction.html" aria-label="Open the write-up: Branch predictors and out-of-order structures"><div data-chart="bp-speedup" data-mode="thumb"></div></a><span class="layer">Hardware</span><br>CMU 18-740, team of 2<br>Fall 2025</div>
       <div>
-        <h3>A pipelined RISC-V core, from single-cycle to forwarding</h3>
-        <p>Built an RV32I core in SystemVerilog step by step: single-cycle, then a 7-stage pipeline, then branch prediction and a set-associative data cache, synthesized for timing, area, and power. My part was the pipeline's stall and forwarding logic.</p>
-        <ul class="stats">
-          <li><b>0.38 → 0.99</b>IPC from stalling to forwarding on a dependency-heavy test</li>
-          <li><b>0.86</b>geomean IPC of the final core at a 2.88 ns clock</li>
-        </ul>
-        <div class="tags"><span class="tag">SystemVerilog</span><span class="tag">VCS</span><span class="tag">Synopsys DC</span></div>
+        <h3><a href="projects/branch-prediction.html">Branch predictors and out-of-order structures</a></h3>
+        <p>In gem5, I wrote TAGE, perceptron, and a hybrid TAGE+ branch predictor and measured them on SPEC CPU benchmarks. In SystemVerilog, I built register renaming for an out-of-order core alongside a reorder buffer and issue queue.</p>
+        <ul class="stats"><li><b>1.38×</b>speedup on nab_r with the hybrid TAGE+ predictor</li></ul>
+        <div class="tags"><span class="tag">gem5</span><span class="tag">C++</span><span class="tag">SystemVerilog</span><span class="tag">SPEC CPU 2017</span></div>
+        <a class="more" href="projects/branch-prediction.html">Read the write-up →</a>
       </div>
     </article>
+
+    <article class="work" data-layer="hardware" data-areas="">
+      <div class="work-meta"><a class="thumb" href="projects/riscv-pipeline.html" aria-label="Open the write-up: A pipelined RISC-V core, from single-cycle to forwarding"><div data-chart="core-ipc" data-mode="thumb"></div></a><span class="layer">Hardware</span><br>CMU 18-447, team of 4<br>Spring 2025</div>
+      <div>
+        <h3><a href="projects/riscv-pipeline.html">A pipelined RISC-V core, from single-cycle to forwarding</a></h3>
+        <p>Built an RV32I core in SystemVerilog step by step: single-cycle, then a 7-stage pipeline, then branch prediction and a set-associative data cache, synthesized for timing, area, and power. My part was the pipeline's stall and forwarding logic.</p>
+        <ul class="stats"><li><b>0.38 → 0.99</b>IPC from stalling to forwarding on a dependency-heavy test</li><li><b>0.86</b>geomean IPC of the final core</li></ul>
+        <div class="tags"><span class="tag">SystemVerilog</span><span class="tag">VCS</span><span class="tag">Synopsys DC</span></div>
+        <a class="more" href="projects/riscv-pipeline.html">Read the write-up →</a>
+      </div>
+    </article>
+
+    <article class="work" data-layer="hardware" data-areas="">
+      <div class="work-meta"><a class="thumb" href="projects/rtl-design.html" aria-label="Open the write-up: RTL design: an FPGA accelerator, a network-on-chip, and USB"><div data-chart="mm-util" data-mode="thumb"></div></a><span class="layer">Hardware</span><br>CMU 18-341<br>Fall 2025</div>
+      <div>
+        <h3><a href="projects/rtl-design.html">RTL design: an FPGA accelerator, a network-on-chip, and USB</a></h3>
+        <p>Three SystemVerilog designs: a pipelined matrix-vector accelerator that meets timing at 100 MHz on a Spartan-7, a two-router network-on-chip with fair arbitration, and the bit-level layers of a USB host.</p>
+        <ul class="stats"><li><b>100 MHz</b>timing met with 0.70 ns slack</li><li><b>97%</b>of on-chip block RAM used</li></ul>
+        <div class="tags"><span class="tag">SystemVerilog</span><span class="tag">Vivado</span><span class="tag">Spartan-7 FPGA</span><span class="tag">VCS</span></div>
+        <a class="more" href="projects/rtl-design.html">Read the write-up →</a>
+      </div>
+    </article>
+
+    <article class="work" data-layer="hardware" data-areas="">
+      <div class="work-meta"><a class="thumb" href="projects/safefollow.html" aria-label="Open the write-up: SafeFollow: a robot that follows a person and avoids obstacles"><div data-chart="sf-distance" data-mode="thumb"></div></a><span class="layer">Hardware</span><br>CMU 18-500 capstone, team of 2<br>Spring 2026</div>
+      <div>
+        <h3><a href="projects/safefollow.html">SafeFollow: a robot that follows a person and avoids obstacles</a></h3>
+        <p>A Raspberry Pi 5 robot that tracks one person with YOLO and a stereo camera, keeps a set following distance, and stops for obstacles. I built the vision pipeline: detection, tracking with stable identities, and depth estimation.</p>
+        <ul class="stats"><li><b>94%</b>mAP@0.5 person detection</li><li><b>9.7</b>FPS on the Pi's CPU</li></ul>
+        <div class="tags"><span class="tag">YOLO11</span><span class="tag">ByteTrack</span><span class="tag">OpenCV stereo</span><span class="tag">Raspberry Pi 5</span></div>
+        <a class="more" href="projects/safefollow.html">Read the write-up →</a>
+      </div>
+    </article>
+<!-- work:end -->
   </section>
 
   <!-- ============ about ============ -->
@@ -202,10 +251,10 @@
       <div>
         <h3 class="sub-h">Experience &amp; education</h3>
         <ul class="timeline">
-          <li><span class="when">2026 –</span><span class="what"><b>Stanford University</b><span>MS Computer Science, Computer Systems · expected 2028</span></span></li>
-          <li><span class="when">2026</span><span class="what"><b>ByteDance</b><span>Software engineering intern, San Jose</span></span></li>
-          <li><span class="when">2025 – 26</span><span class="what"><b>CMU research</b><span>STAR Lab · Catalyst Lab · Moura group</span></span></li>
-          <li><span class="when">2022 – 26</span><span class="what"><b>Carnegie Mellon University</b><span>BS Computer Science · BS Electrical &amp; Computer Engineering · GPA 3.91</span></span></li>
+          <li class="has-logo"><span class="logo"><img src="assets/logos/stanford.png" alt="Stanford University" width="26" height="26" loading="lazy"></span><span class="when">2026 –</span><span class="what"><b>Stanford University</b><span>MS Computer Science, Computer Systems · expected 2028</span></span></li>
+          <li class="has-logo"><span class="logo"><img src="assets/logos/bytedance.png" alt="ByteDance" width="26" height="26" loading="lazy"></span><span class="when">2026</span><span class="what"><b>ByteDance</b><span>Software engineering intern, San Jose</span></span></li>
+          <li class="has-logo"><span class="logo"><img src="assets/logos/cmu.png" alt="Carnegie Mellon University" width="26" height="26" loading="lazy"></span><span class="when">2025 – 26</span><span class="what"><b>CMU research</b><span>STAR Lab · Catalyst Lab · Moura group</span></span></li>
+          <li class="has-logo"><span class="logo"><img src="assets/logos/cmu.png" alt="Carnegie Mellon University" width="26" height="26" loading="lazy"></span><span class="when">2022 – 26</span><span class="what"><b>Carnegie Mellon University</b><span>BS Computer Science · BS Electrical &amp; Computer Engineering · GPA 3.91</span></span></li>
         </ul>
       </div>
       <div>
@@ -222,6 +271,7 @@
         </ul>
         <h3 class="sub-h">Award</h3>
         <p style="margin:0;color:var(--ink-2)"><b style="color:var(--ink);font-weight:600">Outstanding Winner and MAA Award</b>, Mathematical Contest in Modeling 2025, with a teammate from Rice University. Our model managed tourism in Juneau, Alaska; 43 of 27,000+ MCM/ICM teams were named Outstanding. <a href="https://www.comap-math.org/mcm/2025Certs/2504448.pdf">Certificate</a> · <a href="https://www.contest.comap.com/undergraduate/contests/mcm/contests/2025/results/">official results</a></p>
+        <a class="more" href="projects/mcm-2025.html">Read the write-up →</a>
       </div>
     </div>
   </section>
@@ -232,6 +282,8 @@
     <span>Last updated Oct 2026</span>
   </footer>
 </div>
-<script src="assets/stack.js?v=2"></script>
+<script src="assets/chart-data.js?v=9"></script>
+<script src="assets/charts.js?v=9"></script>
+<script src="assets/stack.js?v=9"></script>
 </body>
 </html>

@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Branch Prediction Lab</title>
+  <meta name="description" content="Two labs on what keeps a modern core busy: guessing branches early, and executing instructions out of order without breaking the program.">
+  <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Branch predictors and out-of-order structures">
+  <meta property="og:description" content="Two labs on what keeps a modern core busy: guessing branches early, and executing instructions out of order without breaking the program.">
+  <meta property="og:url" content="https://xinyu511.github.io/projects/branch-prediction.html">
+  <meta name="twitter:card" content="summary">
+  <meta name="theme-color" content="#f4f6f9" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0c1016" media="(prefers-color-scheme: dark)">
+  <link rel="canonical" href="https://xinyu511.github.io/projects/branch-prediction.html">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/site.css?v=9">
+</head>
+<body>
+<div class="wrap">
+  <header class="topbar">
+    <a class="home" href="../">← xinyu li</a>
+    <nav><a href="../#work">work</a><a href="../#about">about</a></nav>
+  </header>
+
+  <main class="article">
+    <div class="kicker">Hardware · CMU 18-740 Modern Computer Architecture · Fall 2025</div>
+    <h1>Branch predictors and out-of-order structures</h1>
+    <p class="dek">Two labs on what keeps a modern core busy: guessing branches early, and executing instructions out of order without breaking the program.</p>
+    <div class="meta-row"><span>Two-person team</span><span>gem5 · C++ · SystemVerilog · Cadence Genus</span></div>
+    <div class="facts"><div><b>7</b><span>predictors compared</span></div><div><b>4</b><span>SPEC CPU benchmarks</span></div><div><b>8M</b><span>instructions per run</span></div><div><b>1.38×</b><span>best speedup (nab_r)</span></div></div>
+    
+
+<h2>Branch prediction in gem5</h2>
+<p>We implemented predictors in gem5 on an in-order ARM core with a 64 kB L1 and 1 MB L2, and simulated 8 million instructions of four SPEC CPU 2017 benchmarks. I wrote the TAGE predictor, the perceptron predictor, and our custom hybrid TAGE+ predictor.</p>
+<figure class="figure chart-fig">
+  <div class="chart-title">Speedup over always-not-taken</div>
+  <p class="chart-sub">Simulated time of the always-not-taken baseline divided by each predictor's simulated time.</p>
+  <div data-chart="bp-speedup"></div>
+</figure>
+<p>The hybrid TAGE+ predictor is best or tied on every benchmark. The gains depend on the program: branch-heavy code with local patterns (nab_r, imagick_r) gains 26–38%, while deepsjeng_r barely moves with any predictor.</p>
+
+<h2>Out-of-order structures in SystemVerilog</h2>
+<p>The second lab moved to the structures that make out-of-order execution correct: a register renaming unit that maps architectural registers to physical ones and tracks free registers, a reorder buffer that retires instructions in program order, and an issue queue that wakes up instructions when their operands are ready. I built the renaming logic. We synthesized the components in Cadence Genus and studied core configurations in gem5's out-of-order model.</p>
+
+  </main>
+
+  <footer>
+    <a href="../#work">← all work</a>
+    <span>lixinyu@stanford.edu</span>
+  </footer>
+</div>
+<script src="../assets/chart-data.js?v=9"></script>
+<script src="../assets/charts.js?v=9"></script>
+</body>
+</html>

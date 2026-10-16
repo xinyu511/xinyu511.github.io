@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>RISC-V Pipeline</title>
+  <meta name="description" content="Four labs, one core: start from a single-cycle RV32I design and make it faster without making it wrong.">
+  <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="A pipelined RISC-V core, from single-cycle to forwarding">
+  <meta property="og:description" content="Four labs, one core: start from a single-cycle RV32I design and make it faster without making it wrong.">
+  <meta property="og:url" content="https://xinyu511.github.io/projects/riscv-pipeline.html">
+  <meta name="twitter:card" content="summary">
+  <meta name="theme-color" content="#f4f6f9" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0c1016" media="(prefers-color-scheme: dark)">
+  <link rel="canonical" href="https://xinyu511.github.io/projects/riscv-pipeline.html">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/site.css?v=9">
+</head>
+<body>
+<div class="wrap">
+  <header class="topbar">
+    <a class="home" href="../">← xinyu li</a>
+    <nav><a href="../#work">work</a><a href="../#about">about</a></nav>
+  </header>
+
+  <main class="article">
+    <div class="kicker">Hardware · CMU 18-447 Introduction to Computer Architecture · Spring 2025</div>
+    <h1>A pipelined RISC-V core, from single-cycle to forwarding</h1>
+    <p class="dek">Four labs, one core: start from a single-cycle RV32I design and make it faster without making it wrong.</p>
+    <div class="meta-row"><span>Team of four; I built the lab 2 pipeline control</span><span>SystemVerilog · VCS · Synopsys Design Compiler</span></div>
+    <div class="facts"><div><b>7</b><span>pipeline stages (labs 2–3)</span></div><div><b>0.99</b><span>IPC with forwarding</span></div><div><b>2.88 ns</b><span>final clock period</span></div><div><b>0.86</b><span>final geomean IPC</span></div></div>
+    
+
+<h2>The path</h2>
+<ul>
+  <li><strong>Lab 1:</strong> a single-cycle RV32I core.</li>
+  <li><strong>Lab 2:</strong> a 7-stage pipeline (two fetch stages, decode, execute, two memory stages, writeback), first stalling on data hazards, then with full forwarding. This was my part.</li>
+  <li><strong>Lab 3:</strong> branch prediction with a branch target buffer and 1- and 2-bit direction counters, flushing on a mispredict.</li>
+  <li><strong>Lab 4:</strong> a parameterized set-associative data cache, then tuning the whole design for performance per watt.</li>
+</ul>
+
+<h2>Stalling vs. forwarding</h2>
+<figure class="figure chart-fig">
+  <div class="chart-title">Instructions per cycle, 7-stage pipeline</div>
+  <p class="chart-sub">Two course test programs with different amounts of back-to-back data dependence.</p>
+  <div data-chart="core-ipc"></div>
+</figure>
+<p>A stalling pipeline waits for a result to be written back before a dependent instruction can read it; forwarding passes the result from later stages straight to the instruction that needs it. On the dependency-heavy test, IPC went from 0.377 to 0.991 while the clock stayed within 3% (357 vs. 346 MHz), taking throughput from 135 to 343 million instructions per second.</p>
+
+<h2>Where the team ended up</h2>
+<p>A 2-bit predictor reached about 91% accuracy on two of the three branch tests (68% on the third) and cut cycle counts by 21–30% against always-not-taken. The final core, with a 2-way data cache and rebalanced critical paths, ran at a 2.88 ns clock with a geomean IPC of 0.86 across four benchmarks, about 298 million instructions per second.</p>
+
+  </main>
+
+  <footer>
+    <a href="../#work">← all work</a>
+    <span>lixinyu@stanford.edu</span>
+  </footer>
+</div>
+<script src="../assets/chart-data.js?v=9"></script>
+<script src="../assets/charts.js?v=9"></script>
+</body>
+</html>

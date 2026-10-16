@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Vector Search Recall</title>
+  <meta name="description" content="Average recall hides the queries that get bad answers. We measured recall per query and per region of the embedding space, and found the misses are not spread evenly.">
+  <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Measuring who vector search fails">
+  <meta property="og:description" content="Average recall hides the queries that get bad answers. We measured recall per query and per region of the embedding space, and found the misses are not spread evenly.">
+  <meta property="og:url" content="https://xinyu511.github.io/projects/vector-recall.html">
+  <meta name="twitter:card" content="summary">
+  <meta name="theme-color" content="#f4f6f9" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0c1016" media="(prefers-color-scheme: dark)">
+  <link rel="canonical" href="https://xinyu511.github.io/projects/vector-recall.html">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/site.css?v=9">
+</head>
+<body>
+<div class="wrap">
+  <header class="topbar">
+    <a class="home" href="../">← xinyu li</a>
+    <nav><a href="../#work">work</a><a href="../#about">about</a></nav>
+  </header>
+
+  <main class="article">
+    <div class="kicker">Retrieval & systems · CMU STAR Lab · Feb 2025 – May 2026</div>
+    <h1>Measuring who vector search fails</h1>
+    <p class="dek">Average recall hides the queries that get bad answers. We measured recall per query and per region of the embedding space, and found the misses are not spread evenly.</p>
+    <div class="meta-row"><span>Advised by Prof. Akshitha Sriraman</span><span>Python · pgvector · Docker · ann-benchmarks</span></div>
+    <div class="facts"><div><b>10,000</b><span>queries per sweep</span></div><div><b>8</b><span>search settings per index</span></div><div><b>4</b><span>new workloads added</span></div><div><b>0.16</b><span>recall gap across clusters</span></div></div>
+    
+
+<h2>The problem</h2>
+<p>pgvector's HNSW index trades accuracy for speed through its search breadth, <code>ef_search</code>. Benchmarks report mean recall, but recall varies a lot from query to query, and queries from some parts of the embedding space are served much worse than others.</p>
+
+<h2>What I built</h2>
+<ul>
+  <li><strong>The offline measurement pipeline</strong> on top of ann-benchmarks: pgvector HNSW in Docker, swept over index and search settings, recording recall@10 for every query instead of the average.</li>
+  <li><strong>Per-cluster analysis:</strong> KMeans over the query vectors, recall distributions per cluster (violin and box plots), and Earth Mover's distance between clusters.</li>
+  <li><strong>New workloads:</strong> GloVe, CIFAR-10/100 image embeddings, FairFace, and DBpedia.</li>
+  <li><strong>The runtime side:</strong> co-designed the lab's adaptive loop, which assigns each query to a cluster and retunes search breadth per cluster to hold recall up, and helped build its monitoring module.</li>
+</ul>
+
+<h2>What the measurements show</h2>
+<figure class="figure chart-fig">
+  <div class="chart-title">Queries left behind, GloVe-100 (10,000 queries)</div>
+  <p class="chart-sub">Share of queries whose recall@10 is below 0.9, as search breadth grows.</p>
+  <div data-chart="star-tail"></div>
+</figure>
+<p>At a low search breadth the mean recall is 0.70, but more than half the queries fall below 0.9. Raising the breadth fixes them, at a steep price in throughput:</p>
+<figure class="figure chart-fig">
+  <div class="chart-title">Recall against throughput, HNSW M=16</div>
+  <p class="chart-sub">Each point is one ef_search setting, from 10 (fastest) to 800.</p>
+  <div data-chart="star-tradeoff"></div>
+</figure>
+<p>The misses also cluster. Grouping GloVe-25 queries into ten regions of the embedding space, the worst region's mean recall is 0.16 below the best one's at the same setting. That gap is what a single global search breadth can't fix, and why the lab's system tunes search per region.</p>
+<figure class="figure chart-fig">
+  <div class="chart-title">Mean recall@10 by query cluster, GloVe-25, ef_search 10</div>
+  <p class="chart-sub">Queries grouped by KMeans (k = 10) on the query vectors; overall mean 0.804.</p>
+  <div data-chart="star-clusters"></div>
+</figure>
+
+  </main>
+
+  <footer>
+    <a href="../#work">← all work</a>
+    <span>lixinyu@stanford.edu</span>
+  </footer>
+</div>
+<script src="../assets/chart-data.js?v=9"></script>
+<script src="../assets/charts.js?v=9"></script>
+</body>
+</html>

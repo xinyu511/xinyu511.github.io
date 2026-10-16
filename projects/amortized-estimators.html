@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Amortized Certification</title>
+  <meta name="description" content="Randomized smoothing certifies a classifier by asking how its prediction changes under Gaussian noise. The standard answer costs hundreds of forward passes per input. We learned to predict it in one.">
+  <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="One network pass instead of thousands of Monte Carlo samples">
+  <meta property="og:description" content="Randomized smoothing certifies a classifier by asking how its prediction changes under Gaussian noise. The standard answer costs hundreds of forward passes per input. We learned to predict it in one.">
+  <meta property="og:url" content="https://xinyu511.github.io/projects/amortized-estimators.html">
+  <meta name="twitter:card" content="summary">
+  <meta name="theme-color" content="#f4f6f9" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0c1016" media="(prefers-color-scheme: dark)">
+  <link rel="canonical" href="https://xinyu511.github.io/projects/amortized-estimators.html">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/site.css?v=9">
+</head>
+<body>
+<div class="wrap">
+  <header class="topbar">
+    <a class="home" href="../">← xinyu li</a>
+    <nav><a href="../#work">work</a><a href="../#about">about</a></nav>
+  </header>
+
+  <main class="article">
+    <div class="kicker">Models · CMU, Prof. José Moura's group · May 2025 – 2026</div>
+    <h1>One network pass instead of thousands of Monte Carlo samples</h1>
+    <p class="dek">Randomized smoothing certifies a classifier by asking how its prediction changes under Gaussian noise. The standard answer costs hundreds of forward passes per input. We learned to predict it in one.</p>
+    <div class="meta-row"><span>Research with a PhD student lead</span><span>PyTorch · Lightning · Hydra · AWS Trainium</span></div>
+    <div class="facts"><div><b>1</b><span>certifier pass per query</span></div><div><b>160–6,400×</b><span>fewer FLOPs, CIFAR-10</span></div><div><b>1,300×</b><span>median FLOP ratio</span></div><div><b>4</b><span>image datasets</span></div></div>
+    
+
+<h2>The problem</h2>
+<p>To certify a prediction at noise level σ, you estimate the class distribution of the classifier on many noisy copies of the input. Monte Carlo does this with hundreds to tens of thousands of forward passes for every input and every σ. Our certifier is a network conditioned on σ that maps an image to that class distribution directly.</p>
+
+<h2>What I did</h2>
+<ul>
+  <li><strong>The data pipeline:</strong> train a base classifier, generate offline "vote" datasets by Monte Carlo sampling across a grid of σ values, train the certifier with cross-entropy, KL, or L1 losses, and evaluate with all three.</li>
+  <li><strong>The cost study:</strong> for each held-out image and σ, measure the certifier's L1 error against a high-sample reference, then count how many Monte Carlo samples reach the same error and convert both sides to FLOPs.</li>
+  <li><strong>Infrastructure:</strong> runs on MNIST, Fashion-MNIST, KMNIST, and CIFAR-10 on lab GPU servers, and a port of training to AWS Trainium with tensor parallelism.</li>
+</ul>
+
+<h2>Result</h2>
+<figure class="figure chart-fig">
+  <div class="chart-title">Compute to reach the certifier's accuracy, CIFAR-10</div>
+  <p class="chart-sub">500 images × 5 noise levels, binned by the certifier's error on each query. Monte Carlo cost is the FLOPs of the samples it needed to match that error.</p>
+  <div data-chart="nncert-flops"></div>
+</figure>
+<p>One certifier pass costs 4.1 MFLOPs; one Monte Carlo sample costs 41 MFLOPs. To match the certifier, Monte Carlo needed 160× to 6,400× more compute depending on how accurate the target was, with a median of about 1,300×. The more precise the answer you need, the bigger the gap. One caveat: Monte Carlo was evaluated in steps of 16 samples, so 160× is the smallest ratio the setup can show.</p>
+
+  </main>
+
+  <footer>
+    <a href="../#work">← all work</a>
+    <span>lixinyu@stanford.edu</span>
+  </footer>
+</div>
+<script src="../assets/chart-data.js?v=9"></script>
+<script src="../assets/charts.js?v=9"></script>
+</body>
+</html>

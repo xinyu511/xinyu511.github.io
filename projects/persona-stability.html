@@ -4,11 +4,11 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Persona Drift Study</title>
-  <meta name="description" content="Why persona-conditioned LLMs drift over long conversations, and what test-time methods can and cannot do about it.">
+  <meta name="description" content="Give a model a persona and let it talk for 40 turns, and it stops sounding like that person. We expected forgetting. What we found was imitation.">
   <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
-  <meta property="og:type" content="website">
+  <meta property="og:type" content="article">
   <meta property="og:title" content="Why role-play LLMs drift in long conversations">
-  <meta property="og:description" content="Why persona-conditioned LLMs drift over long conversations: imitation, not forgetting.">
+  <meta property="og:description" content="Give a model a persona and let it talk for 40 turns, and it stops sounding like that person. We expected forgetting. What we found was imitation.">
   <meta property="og:url" content="https://xinyu511.github.io/projects/persona-stability.html">
   <meta name="twitter:card" content="summary">
   <meta name="theme-color" content="#f4f6f9" media="(prefers-color-scheme: light)">
@@ -17,74 +17,65 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../assets/site.css?v=2">
+  <link rel="stylesheet" href="../assets/site.css?v=9">
 </head>
 <body>
 <div class="wrap">
   <header class="topbar">
     <a class="home" href="../">← xinyu li</a>
-    <nav>
-      <a href="../#work">work</a>
-    </nav>
+    <nav><a href="../#work">work</a><a href="../#about">about</a></nav>
   </header>
 
   <main class="article">
     <div class="kicker">Models · Stanford CS329X · Oct 2026 – ongoing</div>
     <h1>Why role-play LLMs drift in long conversations</h1>
     <p class="dek">Give a model a persona and let it talk for 40 turns, and it stops sounding like that person. We expected forgetting. What we found was imitation.</p>
-    <div class="meta-row">
-      <span>Two-person team; I built most of the harness</span>
-      <span>Python · MLX · Hugging Face · Qwen3</span>
-    </div>
-
-    <div class="facts">
-      <div><b>~225</b><span>dialogues, 40–50 turns</span></div>
-      <div><b>~500</b><span>blind LLM-judge scores</span></div>
-      <div><b>3,135</b><span>published dialogues re-analyzed</span></div>
-      <div><b>24 / 24</b><span>persona facts correct at turn 39</span></div>
-    </div>
-
+    <div class="meta-row"><span>Two-person team; I built most of the harness</span><span>Python · MLX · Hugging Face · Qwen3</span></div>
+    <div class="facts"><div><b>~225</b><span>dialogues, 40–50 turns</span></div><div><b>~500</b><span>blind LLM-judge scores</span></div><div><b>3,135</b><span>published dialogues re-analyzed</span></div><div><b>24 / 24</b><span>persona facts correct at turn 39</span></div></div>
     <div class="tldr"><p><strong>TL;DR.</strong> Over long conversations, a persona-conditioned model starts copying text that is already in its context, both its own earlier replies and its partner's, while it can still answer questions about the persona correctly. Training-free fixes that push the persona's logits back in did not help. Damping attention to the speaker's own old replies is the one intervention with a consistent positive sign.</p></div>
 
-    <h2>The question</h2>
-    <p>LLM-simulated users and role-play agents are only useful over a long horizon if they stay the person they were set up to be. Our original idea was a test-time, training-free fix: compare the next-token distribution with and without the persona in the prompt, treat the difference as the persona's contribution, and add a scaled part of it back once the persona fades.</p>
+<h2>The question</h2>
+<p>LLM-simulated users and role-play agents are only useful over a long horizon if they stay the person they were set up to be. Our original idea was a test-time, training-free fix: compare the next-token distribution with and without the persona in the prompt, treat the difference as the persona's contribution, and add a scaled part of it back once the persona fades.</p>
 
-    <h2>What I built</h2>
-    <ul>
-      <li><strong>Two inference backends</strong> (MLX on Apple silicon, Hugging Face on CUDA) with prefix-reusing KV-cache slots, so long dialogues don't re-encode history every turn. Both expose attention bias, hidden-state capture, and residual-stream steering, and load 4-bit and GGUF models.</li>
-      <li><strong>Decoding-time interventions</strong> as plug-in strategies: persona re-injection, classifier-free-guidance-style logit contrast, a static persona logit bias with a drift thermostat, activation steering, and attention damping on the speaker's own history.</li>
-      <li><strong>A two-speaker "dyad" setup</strong> where one model plays both personas, with separate histories, caches, and strategies per side.</li>
-      <li><strong>A blind evaluation pipeline</strong>: dialogues split into anonymized 20-message chunks, scored by independent LLM judges. I calibrated it with planted errors (3/3 caught at the right message) and test-retest across judging phases.</li>
-    </ul>
+<h2>What I built</h2>
+<ul>
+  <li><strong>Two inference backends</strong> (MLX on Apple silicon, Hugging Face on CUDA) with prefix-reusing KV-cache slots, so long dialogues don't re-encode history every turn. Both expose attention bias, hidden-state capture, and residual-stream steering, and load 4-bit and GGUF models.</li>
+  <li><strong>Decoding-time interventions</strong> as plug-in strategies: persona re-injection, classifier-free-guidance-style logit contrast, a static persona logit bias with a drift thermostat, activation steering, and attention damping on the speaker's own history.</li>
+  <li><strong>A two-speaker setup</strong> where one model plays both personas, with separate histories, caches, and strategies per side.</li>
+  <li><strong>A blind evaluation pipeline</strong>: dialogues split into anonymized 20-message chunks, scored by independent LLM judges, calibrated with planted errors (3 of 3 caught at the right message) and test-retest across judging phases.</li>
+</ul>
 
-    <h2>What we found</h2>
-    <p><strong>The model locks into a template within about ten turns.</strong> On Qwen3-8B, the share of a reply's 3-word sequences already in its last five replies rose from 0.28 (turns 0–9) to 0.92 (turns 40–49), while next-token entropy fell from 0.41 to 0.03 nats.</p>
+<h2>What we found</h2>
+<p><strong>The model locks into a template within about ten turns.</strong> On Qwen3-8B, the share of a reply's 3-word sequences already in its last five replies rose from 0.28 (turns 0–9) to 0.92 (turns 40–49), while next-token entropy fell from 0.41 to 0.03 nats.</p>
+<figure class="figure chart-fig">
+  <div class="chart-title">Repetition per turn, Qwen3-8B</div>
+  <p class="chart-sub">Share of a reply's 3-word sequences already in the model's previous 5 replies, mean over 3 scenarios. An anti-repetition sampler (C) stops the loop; a same-model user (D) makes it worse.</p>
+  <div data-chart="persona-repetition"></div>
+</figure>
+<p><strong>It is imitation, not forgetting.</strong> Asked a factual question about its persona at turn 39, the model answered correctly 24 of 24 times (Qwen3-4B, 12 pairs). The persona is still in there; the model just prefers to copy what is already in context. This shows up with every partner we tried: replayed users, a published benchmark's LLM user, and the same model on both sides.</p>
+<figure class="figure chart-fig">
+  <p class="chart-sub">Same model on both sides, 40 replies each: share of a reply's 3-word sequences copied from the partner's previous line. Damping attention to the speaker's own older replies slows copying on one of the two models.</p>
+  <div class="chart-pair">
+    <div><div class="chart-title">Qwen3-4B-Instruct (12 pairs)</div><div data-chart="persona-dyad-qwen"></div></div>
+    <div><div class="chart-title">MiniMax-M2-her-4b (16 pairs)</div><div data-chart="persona-dyad-m2"></div></div>
+  </div>
+</figure>
+<p><strong>Truncating history trades copying for continuity.</strong> Showing the model only the last 4 rounds cut partner copying to 0.15 (vs. 0.33 baseline and 0.20 with attention damping). But a blind continuity judge, run three times, found more contradictions of earlier facts under truncation in 11 of 12 pairs: 3.6 vs. 1.8 per dialogue.</p>
 
-    <figure class="figure">
-      <img src="../assets/img/persona-repetition.png" alt="Line chart of repetition per assistant turn for four settings. Default sampling and same-model user climb to 0.8–1.0 by turn 10; adding the DRY anti-repetition sampler keeps repetition near 0.2." loading="lazy">
-      <figcaption>Fig. 1: Repetition per turn, Qwen3-8B, 3 scenarios. An anti-repetition sampler (C) stops the verbatim loop; a same-model simulated user (D) makes it worse.</figcaption>
-    </figure>
+<h2>What didn't work</h2>
+<p>Our original idea, adding the persona's logit contribution back during decoding, did not improve judged behavior in any of four forms on three models. The distribution-level persona signal and the behavior a judge sees turned out to be decoupled, which is a useful negative result for anyone building drift monitors on logit statistics.</p>
 
-    <p><strong>It is imitation, not forgetting.</strong> When we asked the model a factual question about its persona at turn 39, it answered correctly 24 of 24 times (Qwen3-4B, 12 pairs). The persona is still in there; the model just prefers to copy what is already in context. This shows up with every partner we tried: replayed users, a published benchmark's live LLM user, and the same model on both sides.</p>
+<h2>Next</h2>
+<p>The target has shifted from persona forgetting to <em>conversational collapse between simulated speakers</em>. Next are a drift sensor based on self-similarity of recent replies (Spearman ≈ −0.8 with judged fidelity in our runs) and a versioned API judge for final numbers.</p>
 
-    <figure class="figure">
-      <img src="../assets/img/persona-dyad-copying.png" alt="Two panels. Share of a reply copied from the partner's previous line rises from about 0.05 to 0.35 over 40 turns on both models. Attention damping lowers it to 0.20 on Qwen3-4B but not on MiniMax-M2-her-4b." loading="lazy">
-      <figcaption>Fig. 2: Same model on both sides. Both models end up copying their partner; damping attention to the speaker's own older replies slows it on one of two models.</figcaption>
-    </figure>
-
-    <p><strong>Truncating history trades copying for continuity.</strong> Showing the model only the last 4 rounds cut partner-copying to 0.15 (vs. 0.33 baseline, 0.20 with attention damping). But a blind continuity judge, run three times, found more contradictions of earlier facts under truncation in 11 of 12 pairs: 3.6 vs. 1.8 per dialogue.</p>
-
-    <h2>What didn't work</h2>
-    <p>Our original idea, adding the persona's logit contribution back during decoding, did not improve judged behavior in any of four forms on three models. The distribution-level persona signal and the behavior a judge sees turned out to be decoupled, which is a useful negative result for anyone building drift monitors on logit statistics.</p>
-
-    <h2>Next</h2>
-    <p>The target has shifted from "persona forgetting" to <em>conversational collapse between simulated speakers</em>. Next steps are a drift sensor based on self-similarity of recent replies (Spearman ≈ −0.8 with judged fidelity in our runs) and a versioned API judge for final numbers.</p>
   </main>
 
   <footer>
-    <a href="../">← back to all work</a>
+    <a href="../#work">← all work</a>
     <span>lixinyu@stanford.edu</span>
   </footer>
 </div>
+<script src="../assets/chart-data.js?v=9"></script>
+<script src="../assets/charts.js?v=9"></script>
 </body>
 </html>
