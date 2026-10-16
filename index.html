@@ -77,7 +77,7 @@
           <li data-layer="hardware">
             <button class="layer-btn" type="button" aria-pressed="false">
               <span class="name"><span class="name-text">Hardware</span></span>
-              <span class="sub">out-of-order RISC-V</span>
+              <span class="sub">RISC-V pipelines, predictors</span>
             </button>
           </li>
         </ul>
@@ -185,15 +185,15 @@
     </article>
 
     <article class="work" data-layer="hardware" data-areas="">
-      <div class="work-meta"><span class="layer">Hardware</span><br>CMU 18-447<br>Spring 2025</div>
+      <div class="work-meta"><span class="layer">Hardware</span><br>CMU 18-447, team of 4<br>Spring 2025</div>
       <div>
-        <h3>A 7-stage out-of-order RISC-V core</h3>
-        <p>Designed in SystemVerilog with register renaming, caching, and forwarding, then added hybrid branch predictors (TAGE-style and a neural predictor) and did timing, area, and power analysis.</p>
+        <h3>A pipelined RISC-V core, from single-cycle to forwarding</h3>
+        <p>Built an RV32I core in SystemVerilog step by step: single-cycle, then a 7-stage pipeline, then branch prediction and a set-associative data cache, synthesized for timing, area, and power. My part was the pipeline's stall and forwarding logic.</p>
         <ul class="stats">
-          <li><b>+25–30%</b>IPC from branch prediction</li>
-          <li><b>2.7 ns</b>critical path</li>
+          <li><b>0.38 → 0.99</b>IPC from stalling to forwarding on a dependency-heavy test</li>
+          <li><b>0.86</b>geomean IPC of the final core at a 2.88 ns clock</li>
         </ul>
-        <div class="tags"><span class="tag">SystemVerilog</span><span class="tag">VCS</span><span class="tag">gem5</span></div>
+        <div class="tags"><span class="tag">SystemVerilog</span><span class="tag">VCS</span><span class="tag">Synopsys DC</span></div>
       </div>
     </article>
   </section>
