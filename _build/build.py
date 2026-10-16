@@ -16,7 +16,7 @@ import re
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-V = "13"  # asset cache-busting version
+V = "14"  # asset cache-busting version
 
 LAYERS = {
     "agents": "Agents",
@@ -46,7 +46,7 @@ RAFT_ART = """<svg viewBox="0 0 120 72" aria-hidden="true" class="thumb-art">
 PROJECTS = [
     # ------------------------------------------------------------------ agents
     dict(
-        slug=None, layer="agents", areas="agentic llm-agents ai-infra",
+        slug=None, layer="agents", areas="agentic llm-agents bidding recsys backend",
         org="ByteDance", when="Jul – Sep 2026 · intern",
         title="An agent loop that tunes an ads calibration system",
         summary="Replaced manual tuning of an ad-outcome calibration system with a dynamic agentic optimization loop. I also built a self-evolving skill subsystem: execution outcomes become versioned skill definitions, stored in distributed storage that runtime agents read directly instead of going through the API tier.",
@@ -55,7 +55,7 @@ PROJECTS = [
     ),
     # ------------------------------------------------------------------ models
     dict(
-        slug="persona-stability", layer="models", areas="llm conversational llm-agents inference",
+        slug="persona-stability", layer="models", areas="llm-agents dl",
         org="Stanford CS329X", when="Oct 2026 – now",
         title="Why role-play LLMs drift in long conversations",
         summary="Over 40+ turns, persona-conditioned LLMs stop sounding like their character. We found the failure looks like imitation, not forgetting: the model copies its own and its partner's earlier lines while still answering persona facts correctly. I built the harness: KV-cache-reusing MLX and Hugging Face backends, decoding-time interventions, and a blind LLM judge calibrated with planted errors.",
@@ -98,7 +98,7 @@ PROJECTS = [
         ),
     ),
     dict(
-        slug="mm-hdl", layer="models", areas="llm mlsys",
+        slug="mm-hdl", layer="models", areas="graphs dl",
         org="CMU 11-777, team of 4", when="Spring 2026",
         title="Multimodal representations of hardware designs",
         summary="Can a model understand a Verilog design better by reading its code and its dataflow graph together? Our team learned joint embeddings of 14,167 designs for description search and circuit-type classification. I built the LLM classification benchmark and its error analysis, plus graph-encoder pretraining for the trained model.",
@@ -134,7 +134,7 @@ PROJECTS = [
         ),
     ),
     dict(
-        slug="amortized-estimators", layer="models", areas="mlsys gpus",
+        slug="amortized-estimators", layer="models", areas="dl",
         org="CMU, Moura group", when="May 2025 – 2026",
         title="One network pass instead of thousands of Monte Carlo samples",
         summary="Certifying a classifier's robustness usually means hundreds to thousands of noisy forward passes per input. We trained a small network that predicts the Monte Carlo answer in one pass. I built the vote-dataset pipeline, ran the cost comparisons on GPU servers, and ported training to AWS Trainium.",
@@ -166,7 +166,7 @@ PROJECTS = [
         ),
     ),
     dict(
-        slug="qa-generation", layer="models", areas="llm ir",
+        slug="qa-generation", layer="models", areas="dl",
         org="CMU NLP course, team of 2", when="Fall 2023",
         title="Question answering and generation over long documents",
         summary="To answer a question about a long article, TF-IDF retrieval picks the relevant passages, a BERT classifier routes yes/no versus open questions, and fine-tuned T5 models answer each type. A second pipeline turns extracted keywords into questions with another fine-tuned T5.",
@@ -195,7 +195,7 @@ PROJECTS = [
     ),
     # ------------------------------------------------------------------ retrieval
     dict(
-        slug="vector-recall", layer="retrieval", areas="ir sys",
+        slug="vector-recall", layer="retrieval", areas="graphs recsys backend",
         org="CMU STAR Lab", when="Feb 2025 – May 2026",
         title="Measuring who vector search fails",
         summary="Approximate nearest-neighbor search in pgvector returns good results for some groups of queries and poor results for others. I built the lab's offline measurement pipeline, added new workloads, co-designed the lab's adaptive loop that retunes search per query cluster at runtime, and helped build its monitor. Advised by Prof. Akshitha Sriraman.",
@@ -231,7 +231,7 @@ PROJECTS = [
         ),
     ),
     dict(
-        slug="distributed-systems", layer="retrieval", areas="sys",
+        slug="distributed-systems", layer="retrieval", areas="backend",
         org="CMU 15-440", when="Fall 2024",
         title="Distributed systems in Go: a transport protocol, Raft, and a replicated store",
         summary="Three systems from the distributed systems course: a reliable, ordered transport protocol on top of UDP, the Raft consensus algorithm with leader election and log replication, and an eventually consistent key-value store built on actors that replicates across servers.",
@@ -279,7 +279,7 @@ PROJECTS = [
     ),
     # ------------------------------------------------------------------ kernels
     dict(
-        slug=None, layer="kernels", areas="gpus mlsys inference",
+        slug=None, layer="kernels", areas="arch hw",
         org="CMU Catalyst Lab", when="May – Aug 2025",
         title="A tensor-kernel compiler for NVIDIA Blackwell",
         summary="Built a compiler for B200 GPUs on TVM with custom scheduling and prototyped codegen passes. Tuned matmul through tile sizes, memory movement, and kernel fusion in PTX and CUDA.",
@@ -288,7 +288,7 @@ PROJECTS = [
         thumb="bw-matmul",
     ),
     dict(
-        slug="cuda-fault-sim", layer="kernels", areas="gpus sys",
+        slug="cuda-fault-sim", layer="kernels", areas="graphs arch hw",
         org="CMU 15-418, team of 2", when="Spring 2025",
         title="A CUDA differentiable fault simulator",
         summary="Gradient-based test generation for chips needs a fault simulator that runs inside PyTorch. We replaced a graph-library implementation with custom CUDA kernels that propagate logic values and fault observability layer by layer, one thread per gate.",
@@ -322,7 +322,7 @@ PROJECTS = [
     ),
     # ------------------------------------------------------------------ hardware
     dict(
-        slug="branch-prediction", layer="hardware", areas="",
+        slug="branch-prediction", layer="hardware", areas="arch hw",
         org="CMU 18-740, team of 2", when="Fall 2025",
         title="Branch predictors and out-of-order structures",
         summary="In gem5, I wrote TAGE, perceptron, and a hybrid TAGE+ branch predictor and measured them on SPEC CPU benchmarks. In SystemVerilog, I built register renaming for an out-of-order core alongside a reorder buffer and issue queue.",
@@ -348,7 +348,7 @@ PROJECTS = [
         ),
     ),
     dict(
-        slug="riscv-pipeline", layer="hardware", areas="",
+        slug="riscv-pipeline", layer="hardware", areas="arch hw",
         org="CMU 18-447, team of 4", when="Spring 2025",
         title="A pipelined RISC-V core, from single-cycle to forwarding",
         summary="Built an RV32I core in SystemVerilog step by step: single-cycle, then a 7-stage pipeline, then branch prediction and a set-associative data cache, synthesized for timing, area, and power. My part was the pipeline's stall and forwarding logic.",
@@ -381,7 +381,7 @@ PROJECTS = [
         ),
     ),
     dict(
-        slug="rtl-design", layer="hardware", areas="",
+        slug="rtl-design", layer="hardware", areas="hw",
         org="CMU 18-341", when="Fall 2025",
         title="RTL design: an FPGA accelerator, a network-on-chip, and USB",
         summary="Three SystemVerilog designs: a pipelined matrix-vector accelerator that meets timing at 100 MHz on a Spartan-7, a two-router network-on-chip with fair arbitration, and the bit-level layers of a USB host.",
@@ -409,7 +409,7 @@ PROJECTS = [
         ),
     ),
     dict(
-        slug="safefollow", layer="hardware", areas="",
+        slug="safefollow", layer="hardware", areas="dl hw",
         org="CMU 18-500 capstone, team of 2", when="Spring 2026",
         title="SafeFollow: a robot that follows a person and avoids obstacles",
         summary="A Raspberry Pi 5 robot that tracks one person with YOLO and a stereo camera, keeps a set following distance, and stops for obstacles. I built the vision pipeline: detection, tracking with stable identities, and depth estimation.",
