@@ -16,7 +16,7 @@ import re
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-V = "14"  # asset cache-busting version
+V = "15"  # asset cache-busting version
 
 LAYERS = {
     "agents": "Agents",

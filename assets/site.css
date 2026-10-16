@@ -327,3 +327,11 @@ a.thumb:hover { border-color: var(--accent); transform: translateY(-1px); }
   .id-row h1 { font-size: 38px; white-space: nowrap; }
   .avatar { width: 76px; height: 76px; }
 }
+
+/* this quarter's courses */
+.courses { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.course { border: 1px solid var(--rule); border-radius: 12px; padding: 18px 18px 16px; background: var(--paper); }
+.course-code { font: 600 12px var(--mono); color: var(--accent); letter-spacing: .04em; }
+.course h3 { font: 500 20px/1.25 var(--serif); margin: 6px 0 8px; }
+.course p { margin: 0; font-size: 14.5px; color: var(--ink-2); }
+@media (max-width: 860px) { .courses { grid-template-columns: 1fr; } }
