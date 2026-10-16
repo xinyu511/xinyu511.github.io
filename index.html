@@ -164,12 +164,12 @@
       <button class="chip" type="button" data-area="agentic" aria-pressed="false">Agentic AI / Agentic Systems</button>
       <button class="chip" type="button" data-area="llm-agents" aria-pressed="false">LLM Agents / Agent Flow</button>
       <button class="chip" type="button" data-area="dl" aria-pressed="false">Deep Learning</button>
+      <button class="chip" type="button" data-area="inference" aria-pressed="false">AI Inference Optimization</button>
       <button class="chip" type="button" data-area="graphs" aria-pressed="false">Large Scale Graphs</button>
       <button class="chip" type="button" data-area="recsys" aria-pressed="false">Recommendation Systems</button>
       <button class="chip" type="button" data-area="bidding" aria-pressed="false">Bidding</button>
       <button class="chip" type="button" data-area="backend" aria-pressed="false">Back-end</button>
       <button class="chip" type="button" data-area="arch" aria-pressed="false">Computer Architecture</button>
-      <button class="chip" type="button" data-area="hw" aria-pressed="false">Hardware and Architecture</button>
     </div>
     <div class="filter-status" aria-live="polite"></div>
 
@@ -189,7 +189,7 @@
       </div>
     </article>
 
-    <article class="work" data-layer="models" data-areas="llm-agents dl">
+    <article class="work" data-layer="models" data-areas="llm-agents dl inference">
       <div class="work-meta"><a class="thumb" href="projects/persona-stability.html" aria-label="Open the write-up: Why role-play LLMs drift in long conversations"><div data-chart="persona-dyad-qwen" data-mode="thumb"></div></a><span class="layer">Models</span><br>Stanford CS329X<br>Oct 2026 – now</div>
       <div>
         <h3><a href="projects/persona-stability.html">Why role-play LLMs drift in long conversations</a></h3>
@@ -211,7 +211,7 @@
       </div>
     </article>
 
-    <article class="work" data-layer="models" data-areas="dl">
+    <article class="work" data-layer="models" data-areas="dl inference">
       <div class="work-meta"><a class="thumb" href="projects/amortized-estimators.html" aria-label="Open the write-up: One network pass instead of thousands of Monte Carlo samples"><div data-chart="nncert-flops" data-mode="thumb"></div></a><span class="layer">Models</span><br>CMU, Moura group<br>May 2025 – 2026</div>
       <div>
         <h3><a href="projects/amortized-estimators.html">One network pass instead of thousands of Monte Carlo samples</a></h3>
@@ -258,7 +258,7 @@
       </div>
     </article>
 
-    <article class="work" data-layer="kernels" data-areas="arch hw">
+    <article class="work" data-layer="kernels" data-areas="arch inference">
       <div class="work-meta"><div class="thumb" aria-hidden="true"><div data-chart="bw-matmul" data-mode="thumb"></div></div><span class="layer">Kernels &amp; compilers</span><br>CMU Catalyst Lab<br>May – Aug 2025</div>
       <div>
         <h3>A tensor-kernel compiler for NVIDIA Blackwell</h3>
@@ -268,7 +268,7 @@
       </div>
     </article>
 
-    <article class="work" data-layer="kernels" data-areas="graphs arch hw">
+    <article class="work" data-layer="kernels" data-areas="graphs arch">
       <div class="work-meta"><a class="thumb" href="projects/cuda-fault-sim.html" aria-label="Open the write-up: A CUDA differentiable fault simulator"><div data-chart="faultsim-block" data-mode="thumb"></div></a><span class="layer">Kernels &amp; compilers</span><br>CMU 15-418, team of 2<br>Spring 2025</div>
       <div>
         <h3><a href="projects/cuda-fault-sim.html">A CUDA differentiable fault simulator</a></h3>
@@ -279,7 +279,7 @@
       </div>
     </article>
 
-    <article class="work" data-layer="hardware" data-areas="arch hw">
+    <article class="work" data-layer="hardware" data-areas="arch">
       <div class="work-meta"><a class="thumb" href="projects/branch-prediction.html" aria-label="Open the write-up: Branch predictors and out-of-order structures"><div data-chart="bp-speedup" data-mode="thumb"></div></a><span class="layer">Hardware</span><br>CMU 18-740, team of 2<br>Fall 2025</div>
       <div>
         <h3><a href="projects/branch-prediction.html">Branch predictors and out-of-order structures</a></h3>
@@ -290,7 +290,7 @@
       </div>
     </article>
 
-    <article class="work" data-layer="hardware" data-areas="arch hw">
+    <article class="work" data-layer="hardware" data-areas="arch">
       <div class="work-meta"><a class="thumb" href="projects/riscv-pipeline.html" aria-label="Open the write-up: A pipelined RISC-V core, from single-cycle to forwarding"><div data-chart="core-ipc" data-mode="thumb"></div></a><span class="layer">Hardware</span><br>CMU 18-447, team of 4<br>Spring 2025</div>
       <div>
         <h3><a href="projects/riscv-pipeline.html">A pipelined RISC-V core, from single-cycle to forwarding</a></h3>
@@ -301,7 +301,7 @@
       </div>
     </article>
 
-    <article class="work" data-layer="hardware" data-areas="hw">
+    <article class="work" data-layer="hardware" data-areas="arch">
       <div class="work-meta"><a class="thumb" href="projects/rtl-design.html" aria-label="Open the write-up: RTL design: an FPGA accelerator, a network-on-chip, and USB"><div data-chart="mm-util" data-mode="thumb"></div></a><span class="layer">Hardware</span><br>CMU 18-341<br>Fall 2025</div>
       <div>
         <h3><a href="projects/rtl-design.html">RTL design: an FPGA accelerator, a network-on-chip, and USB</a></h3>
@@ -312,7 +312,7 @@
       </div>
     </article>
 
-    <article class="work" data-layer="hardware" data-areas="dl hw">
+    <article class="work" data-layer="hardware" data-areas="dl">
       <div class="work-meta"><a class="thumb" href="projects/safefollow.html" aria-label="Open the write-up: SafeFollow: a robot that follows a person and avoids obstacles"><div data-chart="sf-distance" data-mode="thumb"></div></a><span class="layer">Hardware</span><br>CMU 18-500 capstone, team of 2<br>Spring 2026</div>
       <div>
         <h3><a href="projects/safefollow.html">SafeFollow: a robot that follows a person and avoids obstacles</a></h3>

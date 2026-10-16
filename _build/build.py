@@ -55,7 +55,7 @@ PROJECTS = [
     ),
     # ------------------------------------------------------------------ models
     dict(
-        slug="persona-stability", layer="models", areas="llm-agents dl",
+        slug="persona-stability", layer="models", areas="llm-agents dl inference",
         org="Stanford CS329X", when="Oct 2026 – now",
         title="Why role-play LLMs drift in long conversations",
         summary="Over 40+ turns, persona-conditioned LLMs stop sounding like their character. We found the failure looks like imitation, not forgetting: the model copies its own and its partner's earlier lines while still answering persona facts correctly. I built the harness: KV-cache-reusing MLX and Hugging Face backends, decoding-time interventions, and a blind LLM judge calibrated with planted errors.",
@@ -134,7 +134,7 @@ PROJECTS = [
         ),
     ),
     dict(
-        slug="amortized-estimators", layer="models", areas="dl",
+        slug="amortized-estimators", layer="models", areas="dl inference",
         org="CMU, Moura group", when="May 2025 – 2026",
         title="One network pass instead of thousands of Monte Carlo samples",
         summary="Certifying a classifier's robustness usually means hundreds to thousands of noisy forward passes per input. We trained a small network that predicts the Monte Carlo answer in one pass. I built the vote-dataset pipeline, ran the cost comparisons on GPU servers, and ported training to AWS Trainium.",
@@ -279,7 +279,7 @@ PROJECTS = [
     ),
     # ------------------------------------------------------------------ kernels
     dict(
-        slug=None, layer="kernels", areas="arch hw",
+        slug=None, layer="kernels", areas="arch inference",
         org="CMU Catalyst Lab", when="May – Aug 2025",
         title="A tensor-kernel compiler for NVIDIA Blackwell",
         summary="Built a compiler for B200 GPUs on TVM with custom scheduling and prototyped codegen passes. Tuned matmul through tile sizes, memory movement, and kernel fusion in PTX and CUDA.",
@@ -288,7 +288,7 @@ PROJECTS = [
         thumb="bw-matmul",
     ),
     dict(
-        slug="cuda-fault-sim", layer="kernels", areas="graphs arch hw",
+        slug="cuda-fault-sim", layer="kernels", areas="graphs arch",
         org="CMU 15-418, team of 2", when="Spring 2025",
         title="A CUDA differentiable fault simulator",
         summary="Gradient-based test generation for chips needs a fault simulator that runs inside PyTorch. We replaced a graph-library implementation with custom CUDA kernels that propagate logic values and fault observability layer by layer, one thread per gate.",
@@ -322,7 +322,7 @@ PROJECTS = [
     ),
     # ------------------------------------------------------------------ hardware
     dict(
-        slug="branch-prediction", layer="hardware", areas="arch hw",
+        slug="branch-prediction", layer="hardware", areas="arch",
         org="CMU 18-740, team of 2", when="Fall 2025",
         title="Branch predictors and out-of-order structures",
         summary="In gem5, I wrote TAGE, perceptron, and a hybrid TAGE+ branch predictor and measured them on SPEC CPU benchmarks. In SystemVerilog, I built register renaming for an out-of-order core alongside a reorder buffer and issue queue.",
@@ -348,7 +348,7 @@ PROJECTS = [
         ),
     ),
     dict(
-        slug="riscv-pipeline", layer="hardware", areas="arch hw",
+        slug="riscv-pipeline", layer="hardware", areas="arch",
         org="CMU 18-447, team of 4", when="Spring 2025",
         title="A pipelined RISC-V core, from single-cycle to forwarding",
         summary="Built an RV32I core in SystemVerilog step by step: single-cycle, then a 7-stage pipeline, then branch prediction and a set-associative data cache, synthesized for timing, area, and power. My part was the pipeline's stall and forwarding logic.",
@@ -381,7 +381,7 @@ PROJECTS = [
         ),
     ),
     dict(
-        slug="rtl-design", layer="hardware", areas="hw",
+        slug="rtl-design", layer="hardware", areas="arch",
         org="CMU 18-341", when="Fall 2025",
         title="RTL design: an FPGA accelerator, a network-on-chip, and USB",
         summary="Three SystemVerilog designs: a pipelined matrix-vector accelerator that meets timing at 100 MHz on a Spartan-7, a two-router network-on-chip with fair arbitration, and the bit-level layers of a USB host.",
@@ -409,7 +409,7 @@ PROJECTS = [
         ),
     ),
     dict(
-        slug="safefollow", layer="hardware", areas="dl hw",
+        slug="safefollow", layer="hardware", areas="dl",
         org="CMU 18-500 capstone, team of 2", when="Spring 2026",
         title="SafeFollow: a robot that follows a person and avoids obstacles",
         summary="A Raspberry Pi 5 robot that tracks one person with YOLO and a stereo camera, keeps a set following distance, and stops for obstacles. I built the vision pipeline: detection, tracking with stable identities, and depth estimation.",
